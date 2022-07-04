@@ -1,0 +1,666 @@
+<div class="head">
+  <div>Set Alerts</div>
+</div>
+<hr>
+
+<div *ngIf="createShow">
+  <button type="button" class="btn btn-primary" (click)="reset()">Back</button>
+  <form class="form-inline pad_top" [formGroup]="myForm" (submit)="submitAlert()">
+    <tabset #staticTabs >
+      <tab heading="Step 1" id="tab1">
+        <div class="col-md-12" *ngIf = "alert_module_required" style="margin-top:30px">
+          <alert type="danger">
+            <strong>OPPS!</strong> Please Fill All The Required Fields And Try Next Again..
+          </alert>
+        </div>
+
+        <div class="col-md-12">
+          <div class="col-md-4 pdt10" style="float:left">
+            <div class="form-group">
+                <label for="file_name"><span class="requirestar">*</span>&nbsp;Alert Name</label>
+                <input type="hidden" [(ngModel)]=" alert_id " class="form-control" id="alertId" formControlName="alert_id">
+                <input type="text" class="form-control inputwidth"
+                id="inputwidth" formControlName="alert_name" [(ngModel)]="alert_name" placeholder="Alert Name" required>
+            </div>
+        </div>
+
+          <div class="col-md-4 pdt10" style="float:left">
+             
+              <div class="form-group">
+                <label for="exampleFormControlSelect1"><span class="requirestar">*</span>&nbsp;Alert Type</label>
+                <select class="form-control" formControlName="alert_type" [(ngModel)]="alert_type" required>
+                  <option [value]="null" disabled>-- Select Alert Type --</option>
+                  <option *ngFor="let alertType of alertTypeData" [value]="alertType.ref_val">{{alertType.ref_val}}</option>
+                </select>
+            </div>
+              </div>
+
+              <div class="col-md-4 pdt10" style="float:left">
+                <div class="form-group">
+                <label for="source_file"><span class="requirestar">*</span>&nbsp;Mode Of Alert</label>
+                <select class="form-control" id="inputwidth" [(ngModel)]="mode_of_alert" (change) = "alertModeChange(selectField.value)" #selectField formControlName="mode_of_alert" required>
+                <option disabled [value]="null">-- Please Alert Mode --</option>
+                <option value="sms"> SMS</option>
+                <!-- <option value="email"> Email</option> -->
+                <!-- <option value="both"> SMS and Email</option> -->
+                </select>
+                </div>
+                </div>
+              </div>
+       
+          <div class="col-md-12 pdt10" style="float:left">
+            <button type="button" class="btn btn-primary btn-sm" style="float:right" (click)="selectTab(1)" >Next</button>
+         </div>
+        </tab>
+
+
+      <tab heading="Step 2" >
+        <div class="col-md-12" *ngIf = "alert_module_required" style="margin-top:30px">
+          <alert type="danger">
+            <strong>OPPS!</strong> Please Fill All The Required Fields And Try Next Again..
+          </alert>
+        </div>
+         <div class="col-md-12 row">
+            <div class="col-md-4 pdt10" style="float:left">
+                <div class="form-group">
+                <label for="source_file"><span class="requirestar">*</span>&nbsp;Source</label>
+                <select class="form-control" id="inputwidth" formControlName="file_source" [(ngModel)]="file_source">
+                <option disabled [value]="null">--Please Select--</option>
+                <option> Fetch</option>
+                <option> File Upload</option>
+                </select>
+                </div>
+                </div>
+
+                <div class="col-md-4 pdt10" style="float:left">
+                    <div class="form-group">
+                        <label for="path_file"><span class="requirestar">*</span>&nbsp;Path</label>
+                        <input type="text" class="form-control inputwidth"
+                        id="inputwidth" formControlName="file_path" [(ngModel)]="file_path" placeholder="Path">
+                        </div>
+                </div>
+
+                <div class="col-md-4 pdt10" style="float:left">
+                  <div class="form-group">
+                  <label for="file_ext"><span class="requirestar">*</span>&nbsp;File Ext</label>
+                  <select class="form-control" id="inputwidth" [(ngModel)]="file_ext" (change) = "extentionChange()" formControlName="file_ext" required>
+                  <option disabled [value]="null">--Please Select--</option>
+                  <option value = "excel"> Excel</option>
+                  <option value = "csv"> csv</option>
+                  <option value = "text"> text</option>
+                  </select>
+                  </div>
+                  </div>
+
+                    <div class="col-md-4 pdt10" style="float:left">
+                        <div class="form-group">
+                            <label for="file_name"><span class="requirestar">*</span>&nbsp;File Name</label>
+                            <input type="text" class="form-control inputwidth"
+                            id="inputwidth" formControlName="file_name" [(ngModel)]="file_name" placeholder="File_DDMMYY.xls">
+                            </div>
+                    </div>
+
+                    <div class="col-md-4 pdt10" *ngIf="csvEnable">
+                      <div class="form-group">
+                        <label for="file"><span class="requirestar">*</span>&nbsp;File Upload :&nbsp;</label>
+                    <input type="file" class="form-control" (change)="addfile($event)" placeholder="Upload file" 
+                    accept=".csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"  [(ngModel)]="this.file" formControlName="file"> 
+                        </div>
+                    </div>
+               
+                  <div class="col-md-4 pdt10" style="float:left" *ngIf="delEnable">
+                    <div class="form-group">
+                        <label for="file_name"><span class="requirestar">*</span>&nbsp;Delimitor</label>
+                        <input type="text" class="form-control inputwidth" (keyup)="Delimitor($event)"
+                        id="inputwidth" [(ngModel)]="delimitor" formControlName="delimitor" placeholder="Delimitor">
+                        </div>
+                </div>
+
+                <div class="col-md-12" *ngIf="fileTypeAlert">
+                  <div class="col-md-3 alert alert-danger" style="float:left" role="alert">
+                   File Type is not matched please choose {{this.file_ext}}
+                  </div>
+                </div>
+               
+         </div>
+
+    <a (click)="addCol()" *ngIf="textEnable" class="btn btn-success" style="float:left;margin-top:30px">Add Column</a>
+    <table class="table table-borderless" style="margin-top:30px" *ngIf="textEnable">
+        <thead>
+          <tr>
+            <th scope="col">Field Position</th>
+            <th scope="col">column Name</th>
+            <th scope="col">Remove</th>
+          </tr>
+          <tr>
+            <span class="alert alert-danger" role="alert"  *ngIf="samePosition">
+              Cant set this as starting position
+            </span>  
+          </tr>
+        </thead>
+        <tbody formArrayName="position_cols" *ngFor="let field of myForm.get('position_cols').controls; let i = index;">
+          <tr [formGroupName]="i">
+            <td>
+              <span class="form-group" style="font-size:14px">
+                <input type="hidden" class="form-control inputwidth" formControlName="text_row_id" [(ngModel)]="textRowId[i]">
+                <input type="text" class="form-control inputwidth" style="height:10%" (keyup)="positionValidation($event,i)"
+                formControlName="field_pos" [(ngModel)]="field_pos[i]" placeholder="eg:1-5">
+              </span>  
+            </td>
+            <td>
+              <span class="form-group" style="font-size:14px">
+                <input type="text" class="form-control inputwidth" style="height:10%"
+                  formControlName="col_pos_name" [(ngModel)]="col_pos_name[i]" (change)="coulmNameChange($event)" placeholder="Column Name">
+              </span>
+            </td>
+            <td> 
+              <span class="form-group" style="font-size:14px">  &nbsp;
+                <a (click) = "deleteCol(i)" > <i class="fa fa-remove fa-2x" style="color:#D0021B"></i></a>
+              </span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      
+      <a (click)="addRow()" *ngIf="excelEnable" style="float:left;margin-top:30px" class="btn btn-success">Add New Rule</a>
+     <div formArrayName="details" *ngFor="let field of myForm.get('details').controls; let ind = index;">
+      <div [formGroupName]="ind">
+      <table class="table table-borderless" style="margin-top:30px"  *ngIf="excelEnable" >
+        <thead >
+          <tr>
+            <th scope="col">column Name</th>
+            <th scope="col">Condition</th>
+            <th scope="col" *ngIf="fromvaueshow[ind] == ind">Value from</th>
+            <th scope="col" *ngIf="fromvaueshow[ind] == ind">Value to</th>
+            <th scope="col" *ngIf="fromvaueshow[ind] != ind">Value</th>
+            <!-- <th scope="col">Conjunction</th> -->
+            <th scope="col">Remove</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr>
+            <td>
+              <span class="form-group" style="font-size:14px">
+                <ng-multiselect-dropdown  [placeholder]="'Select Columns'" [settings]="dropdownSettings1" [ngModel]="columnservice[ind]"
+                [data]="columnservices" formControlName="col_name">
+              </ng-multiselect-dropdown>
+            </span>
+            </td>
+            <td>
+              <span class="form-group">
+                <input type="hidden" class="form-control inputwidth" formControlName="detail_row_id" [(ngModel)]="detailRowId[ind]">
+                <select class="form-control" formControlName="condition" id="inputwidth" [(ngModel)]="conditionModel[ind]" (change) = "conditionBetween(ind)">
+                <option disabled [value]="">--Select--</option>
+                <option value="LessThan"> Less Than </option>
+                <option value="Greater Than"> Greater Than </option>
+                <option value="Equal"> Equal </option>
+                <option value="Not Equal"> Not Equal </option>
+                <option value="Matches"> Matches </option>
+                <option value="Not Matches"> Not Matches </option>
+                <option value="In"> In </option>
+                <option value="Not In"> Not In </option>
+                <option value="Between"> Between </option>
+                </select>
+              </span>
+            </td>
+            <td *ngIf="fromvaueshow[ind] == ind">
+              <span class="form-group" style="font-size:14px" >
+                <input type="text" class="form-control inputwidth" style="height:10%" [ngModel]="colValFrom[ind]"
+                  formControlName="col_value_from" placeholder="Value From">
+              </span>
+            </td>
+            <td *ngIf="fromvaueshow[ind] == ind">
+              <div class="form-group" style="font-size:14px">
+                <input type="text" class="form-control inputwidth" style="height:10%" [ngModel]="colValTo[ind]"
+                  formControlName="col_value_to" placeholder="Value To">
+              </div>
+            </td>
+
+            <td *ngIf="fromvaueshow[ind] != ind"> 
+              <div class="form-group" style="font-size:14px">
+                <input type="text" class="form-control inputwidth" style="height:10%" [ngModel]="colVal[ind]"
+                  formControlName="col_value" placeholder="Value">
+              </div>
+            </td>
+           
+            <!-- <td>
+                <span class="form-group">
+                <ng-multiselect-dropdown  [placeholder]="'Select Condition'" [settings]="conjunctionsettings" (onSelect)="conjunctionChange($event,ind)" [ngModel]="conservice"
+                [data]="conservices" formControlName="conjunction">
+              </ng-multiselect-dropdown>
+              </span>
+            
+            </td> -->
+            <td>
+              <span class="form-group" style="font-size:14px">  &nbsp;
+                <a (click) = "deleteRow(ind)" > <i class="fa fa-remove fa-2x" style="color:#D0021B"></i></a>
+               </span>
+            </td>
+          </tr>
+        </tbody>
+   
+      </table>
+      </div>
+      </div>
+  
+
+         <div class="col-md-12 pdt10" style="float:left">
+            <button type="button" class="btn btn-primary btn-sm" style="float:right" (click)="selectTab(2)" >Next</button>
+            
+          </div>
+      
+        </tab>
+
+
+      <tab heading="Step 3">
+
+        <div class="col-md-12" *ngIf = "alert_module_required" style="margin-top:30px">
+          <alert type="danger">
+            <strong>OPPS!</strong> Please Fill All The Required Fields And Try Next Again..
+          </alert>
+        </div>
+        
+          <div class="row" *ngIf="smsShow" >
+            <div class="col-md-12 head">
+           
+              <div style="padding-right:250px"> SMS </div>
+            </div>
+            <div class="col-md-12 pdt10" style="float:left">
+              <div class="form-group">
+                <label for="template"><span class="requirestar">*</span>&nbsp;SMS Description :&nbsp;</label>
+                <textarea class="form-control" formControlName="template_sms" placeholder="Template"
+                  rows="5" (change)="variableSmsValidation($event)" [(ngModel)]="template_sms">
+                  </textarea>
+              </div>
+            </div>
+
+            <div class="col-md-12 pdt10" style="float:left" *ngIf="varSmsDisable">
+              <div class="form-group" style="font-size:14px">
+                <label for="template">&nbsp;SMS Variable :&nbsp;</label>
+              
+                <input type="text" class="form-control inputwidth" style="height:10%"
+                  formControlName="variable_sms" [(ngModel)]="variable_sms" placeholder="Value">
+              </div>
+            </div>
+             
+            <div class="col-md-12" *ngIf="converted_sms_str">
+              <input type="hidden" formControlName="template_sms_generated" [(ngModel)]="converted_sms_str">
+              <div class="template" *ngIf="varSmsDisable"><span style="color:#F37435"> Generated Template:-  </span> {{this.converted_sms_str}} </div>
+            </div>
+
+            <div class="col-md-2" style="float:left;padding-top:30px;" *ngIf="varSmsDisable">
+              <button type="button" class="btn btn-success btn-sm" (click)="generateSmsTemplate()" >Generate</button>
+            </div>
+
+        
+            <table class="table table-borderless" style="margin-top:30px" *ngIf="smsShow">
+              <thead>
+                <tr>
+                  <th scope="col">Variable Name</th>
+                  <th scope="col">Input File Column</th>
+               
+                </tr>
+              </thead>
+         
+              <tbody formArrayName="map_sms_col" *ngFor="let field of myForm.get('map_sms_col').controls; let smsi = index;">
+                <tr [formGroupName]="smsi">
+        
+                  <td>
+                    <span class="form-group" style="font-size:14px">
+                      <input type="hidden" class="form-control inputwidth" formControlName="row_id" [(ngModel)]="row_id[smsi]">
+                      <input type="text" class="form-control inputwidth" style="height:10%"
+                      formControlName="map_variable" [(ngModel)]="map_variable[smsi]" placeholder=" <Variable Name> ">
+                    </span>  
+                  </td>
+                  <td>
+                    <span class="form-group" style="font-size:14px">
+                        <ng-multiselect-dropdown  [placeholder]="'Select Condition'" [settings]="smsSettings" [ngModel]="map_input_file[smsi]"
+                        [data]="SMScolumnservices" (onSelect)="smsColumnSelect($event)" formControlName="map_input_file">
+                      </ng-multiselect-dropdown>
+                    </span>
+                  </td>
+
+                </tr>
+              </tbody>
+         
+            </table>
+
+   
+
+          </div>
+
+          <hr *ngIf="smsShow && emailShow">
+
+          <div class="row" *ngIf="emailShow">
+            <div class="col-md-12 head">
+              <div style="padding-right:250px"> E-mail </div>
+            </div>
+            <div class="col-md-12 pdt10" style="float:left">
+              <div class="form-group">
+                <label for="template"><span class="requirestar">*</span>&nbsp;Email Description :&nbsp;</label>
+                <textarea class="form-control" formControlName="template_email" [(ngModel)]="template_email" (change)="variableEmailValidation($event)" placeholder="Template"
+                  rows="13">
+                  </textarea>
+              </div>
+            </div>
+  
+            <div class="col-md-12 pdt10" style="float:left" *ngIf="varEmailDisable">
+              <div class="form-group" style="font-size:14px">
+                <label for="template">Email Variable :&nbsp;</label>
+                <input type="text" class="form-control inputwidth" style="height:10%" [(ngModel)]="variable_email"
+                  formControlName="variable_email" placeholder="Value">
+              </div>
+            </div>
+  
+            <div class="col-md-2" style="float:left;padding-top:30px;" *ngIf="varEmailDisable">
+              <button type="button" class="btn btn-success btn-sm" (click)="generateEmailTemplate()" >Generate</button>
+            </div>
+          </div>
+
+          <div class="col-md-12" *ngIf="converted_email_str">
+            <div class="template"><span style="color:#F37435"> Generated Template:-  </span> {{this.converted_email_str}}</div>
+          </div>
+
+          <table class="table table-borderless" style="margin-top:30px" *ngIf="emailShow">
+            <thead>
+              <tr>
+                <th scope="col">Variable Name</th>
+                <th scope="col">Input File Column</th>
+              </tr>
+            </thead>
+       
+            <tbody formArrayName="map_emial_col" *ngFor="let field of myForm.get('map_emial_col').controls; let emailInd = index;">
+              <tr [formGroupName]="emailInd">
+                <td>
+                  <span class="form-group" style="font-size:14px">
+                    <input type="text" class="form-control inputwidth" style="height:10%"
+                    formControlName="map_email_variable" [(ngModel)]="map_email_variable[emailInd]" placeholder=" <Variable Name> ">
+                  </span>  
+                </td>
+                <td>
+                  <span class="form-group" style="font-size:14px">
+                      <ng-multiselect-dropdown  [placeholder]="'Select Condition'" [settings]="smsSettings" [ngModel]="map_email_input_file[emailInd]"
+                      [data]="SMScolumnservices" (onSelect)="smsColumnSelect($event)" formControlName="map_email_input_file">
+                    </ng-multiselect-dropdown>
+                  </span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="col-md-12 pdt10" style="float:left">
+            <button type="button" class="btn btn-primary btn-sm" style="float:right" (click)="selectTab(3)" >Next</button>
+         </div>
+        </tab>
+
+      <tab heading="Step 4">
+        <div class="col-md-12">
+          <div class="row">
+          <div class="col-md-3 pdt10" style="float:left">
+            <div class="form-group">           
+            <label for="source_file">Execution Mode</label>
+            <select class="form-control" id="inputwidth"  [(ngModel)]="exec_mode" (change)="executionModeChange()" formControlName="execution_mode">
+            <option disabled [value]="null">--Please Select--</option>
+            <option value="realTime"> Real Time</option>
+            <option value="batch"> Batch</option>
+            </select>
+            </div>
+          </div>
+          <div class="col-md-3 pdt10" style="float:left">
+          
+              <div class="form-group">
+                <label for="exampleFormControlSelect1"><span class="requirestar">*</span>&nbsp;Approver :&nbsp;</label>
+                <select class="form-control" formControlName="approver" [(ngModel)]="approverSelected" required>
+                  <option [value]="null" disabled>-- Select Approver --</option>
+                  <option *ngFor="let Approvers of approver" [value]="Approvers.login_id">{{Approvers.first_name}}</option>
+                </select>
+            </div>
+          </div>
+          <div class="col-md-3" style="float:left; padding-top:35px;padding-bottom:1%">
+            <div class="form-group">
+              Is sms white Listed : 
+              <label class="switch">
+                <input type="checkbox" [ngModel]="sms_whitelist == 'T'" [value]="sms_whitelist == 'T'" (change) = "smsWhitelist($event)" formControlName="sms_whitelist">
+                <span class="slider round"></span>
+              </label>
+            </div>
+          </div>
+
+          <div class="col-md-3 pdt10" style="float:left" *ngIf = "whiteListedId">
+            <label for="source_file">Template Id</label>
+            <div class="form-group" style="font-size:14px">
+              <input type="text" class="form-control inputwidth" style="height:10%" [ngModel]="whitelist_id"
+                formControlName="template_id" placeholder="Template Id">
+            </div>
+          </div>
+        </div>
+
+        <div class="row" *ngIf = "batchshow">
+        <div class="col-md-2 pdt10" style="float:left">
+          <div class="form-group">
+          <label for="source_file">Batch Duration</label>
+          <select class="form-control" id="inputwidth" (change) = "dateTimeChange()" [(ngModel)]="batch_duration" formControlName="batch_duration">
+          <option disabled [value]="">--Please Select--</option>
+          <option value="daily"> Daily</option>
+          <option value="weekly"> Weekly</option>
+          <option value="monthly"> Monthly</option>
+          <option value="yearly"> Yarly</option>
+          </select>
+          </div>
+        </div>
+
+        <div class="col-md-2 pdt10" style="float:left" *ngIf="weekshow">
+          <div class="form-group" style="font-size:14px">
+            <label for="Dates">Week</label>
+           <ng-multiselect-dropdown  [placeholder]="'Select Days'" [settings]="dropdownSettings" [(ngModel)]="weekServices"
+           [data]="weekService" formControlName="week_wise">
+         </ng-multiselect-dropdown>
+          </div>
+        </div>
+
+          <div class="col-md-2 pdt10" style="float:left" *ngIf="monthshow">
+            <div class="form-group" style="font-size:14px">
+              <label for="Dates">Month</label>
+             <ng-multiselect-dropdown  [placeholder]="'Select Months'" [settings]="dropdownSettings" [(ngModel)]="monthServices"
+             [data]="monthService" formControlName="month_wise">
+           </ng-multiselect-dropdown>
+            </div>
+          </div>
+
+          <div class="col-md-2 pdt10" style="float:left" *ngIf="dateshow">
+            <div class="form-group" style="font-size:14px">
+              <label for="Dates">Date</label>
+             <ng-multiselect-dropdown  [placeholder]="'Select Dates'" [settings]="dropdownSettings" [(ngModel)]="dateServices"
+             [data]="dateService" formControlName="date_wise">
+           </ng-multiselect-dropdown>
+            </div>
+          </div>
+
+          <div class="col-md-2 pdt10" style="float:left" *ngIf="hourshow">
+            <div class="form-group" style="font-size:14px">
+              <label for="Dates">Hour</label>
+             <ng-multiselect-dropdown  [placeholder]="'Select Hour'" [settings]="dropdownSettings" [(ngModel)]="hourServices"
+             [data]="hourService" formControlName="hour_wise">
+           </ng-multiselect-dropdown>
+            </div>
+          </div>
+
+          
+          <div class="col-md-2 pdt10" style="float:left" *ngIf="minuteshow">
+            <div class="form-group" style="font-size:14px">
+              <label for="Dates">Minute</label>
+             <ng-multiselect-dropdown  [placeholder]="'Select minutes'" [settings]="dropdownSettings" [(ngModel)]="minuteServices"
+             [data]="minuteService" formControlName="minute_wise">
+           </ng-multiselect-dropdown>
+            </div>
+          </div>
+        </div>
+
+        </div>
+         <div style="margin-top:20px;text-align: center;">
+        <button type="submit" class="btn btn-success btnsave" [disabled]="!myForm.valid">Submit</button>
+      </div>
+          <!-- <div class="col-md-12" style="float:left">
+            <button type="button" class="btn btn-primary btn-sm" (click)="selectTab(4)" >Previous</button>
+         </div> -->
+        </tab>
+
+
+    </tabset>
+
+    </form>
+  </div>
+   
+
+
+  <ng-template #content let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">Alert View</h4>
+      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="m_l_30 col-md-12 fs_14">
+        <div class="col-md-12 inputbor">
+          <div class="head"> Alert Details</div>
+          <table class="table">
+            <tbody>
+              <tr>
+                <td>Alert Id :</td>
+                <td><span class="textcol">{{viewAlert.alert_id}} </span></td>
+                <td>Created On :</td>
+                <td><span class="textcol">{{viewAlert.added_on}} </span></td>
+              </tr>
+              <tr>
+                <td>Alert Name:</td>
+                <td><span class="textcol">{{viewAlert.alert_name}} </span></td>
+                <td>Updated On :</td>
+                <td><span class="textcol">{{viewAlert.updated_on}} </span></td>
+              </tr>
+              <tr>
+                <td>Alert Type :</td>
+                <td ><span class="textcol">{{viewAlert.alert_type}} </span>
+                </td>
+                <td>Created By</td>
+                <td><span class="textcol">{{viewAlert.added_by}}</span></td>
+              </tr>
+              <tr>
+                <td>Approve Status</td>
+                <td><span class="textcol">{{viewAlert.approve_status}}</span></td>
+                <td>Execution Mode</td>
+                <td><span class="textcol">{{viewAlert.exec_mode}}</span></td>
+              </tr>
+              <tr>
+                <td>Remarks :</td>
+                <td><span class="textcol">{{viewAlert.remarks}}</span></td>
+                <td>Updated By</td>
+                <td><span class="textcol">{{viewAlert.updated_by}}</span></td>
+              </tr>
+              <tr>
+                <td>Batch Duration :</td>
+                <td><span class="textcol">{{viewAlert.batch_exec_on}}</span></td>
+              </tr>
+                  
+           
+            </tbody>
+          </table>
+          <div *ngIf="viewAlert.sms_template">
+            <hr>
+          <div class="smsHeader"> SMS Template </div>
+          <div class="smsBody"> {{viewAlert.sms_template}} </div>
+          </div>
+          <div *ngIf="viewAlert.email_variables">
+            <hr>
+            <div class="smsHeader">Email Template:</div>
+            <div class="smsBody"> {{viewAlert.email_template}} </div>
+          </div>
+          <hr>
+  
+          <div class="head"> Rules Config</div>
+       
+          <table class="table" style="text-align:center">
+              <thead>
+                <tr>
+                  <th scope="col">Alert Name</th>
+                  <th scope="col">Condition</th>
+                  <th scope="col">Value1</th>
+                  <th scope="col">Value2</th>
+                </tr>
+              </thead>
+              <tbody>
+               <tr *ngFor="let details of rules">
+                <td><span *ngFor="let input_field_service of details.input_field_service">{{input_field_service}} | </span></td>
+                <td>{{details.condition}}</td>
+                <td>{{details.value1}}</td>
+                <td>{{details.value2}}</td>
+               </tr>
+            </tbody>
+          </table>
+
+          <hr>
+          <div class="head">SMS Variable Mapping</div>
+          <table class="table" style="text-align:center">
+              <thead>
+                <tr>
+                  <th scope="col">Variable Name</th>
+                  <th scope="col">Input File Column</th>
+                </tr>
+              </thead>
+              <tbody>
+               <tr *ngFor="let smsDetails of sms_mapping">
+                <td>{{smsDetails.input_field_name}}</td>
+                <td>{{smsDetails.value1[0].val_name}}</td>
+               </tr>
+            </tbody>
+          </table>
+          <!-- sms_mapping -->
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+    </div>
+  </ng-template>
+
+
+  <div *ngIf="!createShow">
+    <button type="button" class="btn btn-success" (click)="createAlert()">Create</button>
+     <div>
+      <div class="pad_top inputbor">
+        <div *ngIf="!showContent" class="loader"><span></span></div>
+        <table datatable *ngIf="showContent" [dtOptions]="dtOptions" class="row-border hover" style="width:100%">
+          <thead>
+            <tr>
+              <th scope="col">Alert Id</th>
+              <th scope="col">Alert Name</th>
+              <th scope="col">Alert Type</th>
+              <th scope="col">File Name Formate</th>
+              <th scope="col">File Extention</th>
+              <th scope="col">Added By</th>
+              <th scope="col">Approve Status</th>
+              <th scope="col">Mode Of Alert</th>
+              <th scope="col">Execution Mode</th>
+              <th scope="col">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let alert of allAlerts">
+              <th scope="row">{{alert.alert_id}}</th>
+              <td>{{alert.alert_name}}</td>
+              <td>{{alert.alert_type}}</td>
+              <td>{{alert.file_name_format}}</td>
+              <td>{{alert.file_extension}}</td>
+              <td>{{alert.added_by}}</td>
+              <td>{{alert.approve_status}}</td>
+              <td>{{alert.mode_of_alert}}</td>
+              <td>{{alert.exec_mode}}</td>
+              <td><i (click)="viewAllUpdate(alert)" class="fa fa-edit" aria-hidden="true"></i>&nbsp; &nbsp;
+                <i (click)="open(content,alert)" class="fa fa-eye" aria-hidden="true"></i>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+     </div>
+  </div>
+ 

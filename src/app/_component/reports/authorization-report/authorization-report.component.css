@@ -1,0 +1,37 @@
+.roleheading{
+    text-align: center;
+    font-size:20px;
+    padding-left:30px
+}
+
+
+.m_l_30{
+    padding-left: 30px;
+    padding-right: 30px;
+    padding-top: 20px;
+    padding-top: 20px;
+    font-size:16px;
+
+}
+
+
+/*model*/
+
+.modal-body{
+    font-size: 14px;
+}
+.modal-title{
+    font-size: 18px; 
+    font-weight: bold;
+}
+.boldtex{
+    font-weight: bold;
+}
+/*model end*/
+
+.modal-header{
+    background: #DDDDDD;
+}
+table{
+    font-size:14px;
+}

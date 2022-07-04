@@ -1,0 +1,203 @@
+<div class="m_l_30">
+  <div class="col-md-12 inputbor">
+    <div class="head">
+      <div>Service Management</div>
+    </div>
+
+    <hr>
+    <form class="form-inline" [formGroup]="myForm" (submit)="submitService()">
+      <div class="col-md-4 pdt10">
+        <div class="form-group">
+          <input type="hidden" [(ngModel)]=" service_id " class="form-control" id="serviceId"
+            formControlName="service_id">
+          <label for="serviceName"><span class="requirestar">*</span>&nbsp;Service Name :&nbsp;</label>
+          <input type="text" [(ngModel)]=" service_name " class="form-control inputwidth" id="inputwidth"
+            formControlName="service_name" placeholder="Service Name" required>
+        </div>
+      </div>
+
+      <div class="col-md-4 pdt10">
+        <div class="form-group">
+          <label for="DisplayName"><span class="requirestar">*</span>&nbsp;Display Name :&nbsp;</label>
+          <input type="text" [(ngModel)]=" display_name " class="form-control inputwidth" id="inputwidth"
+            formControlName="display_name" placeholder="Display Name" required>
+        </div>
+      </div>
+      
+      <div class="col-md-4 pdt10">
+        <div class="form-group">
+          <label for="exampleFormControlSelect1"><span class="requirestar">*</span>&nbsp;Node Type :&nbsp;</label>
+          <select class="form-control" [(ngModel)]="node_type" formControlName="node_type"
+            (change)="parantService($event)" id="exampleFormControlSelect1" required>
+            <option disabled [value]="null">-- Select Node Type --</option>
+            <option [selected]="node_type =='Parent'">Parent</option>
+            <option [selected]="node_type =='Child'">Child</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="col-md-4 pdt10" *ngIf="parenthide">
+        <div class="form-group">
+          <label for="exampleFormControlSelect1">Parant Service :&nbsp;</label>
+          <select class="form-control" [(ngModel)]="selectedItem" formControlName="parent_service"
+            id="exampleFormControlSelect1">
+            <option disabled [value]="null">--Please Select--</option>
+            <option *ngFor="let ServicesList of ServicesLists" [value]="ServicesList.service_id">
+              {{ServicesList.display_name}}</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="col-md-4 pdt10">
+        <div class="form-group">
+          <label><span class="requirestar">*</span>&nbsp;Icons:&nbsp;</label>
+          <select class="form-control" [(ngModel)]="icon_value" formControlName="icon" required>
+            <option disabled [value]="null">--Please Select--</option>
+            <option *ngFor="let icon of fafa" [value]="icon">{{icon}} </option>
+          </select>
+        </div>
+      </div>
+
+      <div class="col-md-4 pdt10">
+        <div class="form-group">
+          <label for="url">URL :&nbsp;</label>
+          <input type="text" [(ngModel)]=" action_url " class="form-control inputwidth" formControlName="action_url"
+            placeholder="/Segment">
+        </div>
+      </div>
+
+      <div class="col-md-8 pdt10">
+        <div class="form-group">
+          <label for="DisplayName"><span class="requirestar">*</span>&nbsp;Description :&nbsp;</label>
+          <textarea class="form-control" [(ngModel)]=" description " formControlName="description"
+            placeholder="Description" rows="1" required>
+          </textarea>
+        </div>
+      </div>
+
+      <div class="col-md-4 pdt10" style="padding-top:10px" *ngIf="isUpdate">
+        <div class="form-group" style="font-size:14px"> Active Status : &nbsp;
+          <label class="switch">
+            <input type="checkbox" [ngModel]="enable == 'T'" formControlName="enable">
+            <span class="slider round"></span>
+          </label>
+        </div>
+      </div>
+
+      <div class="col-md-8 pdt10" *ngIf="isUpdate">
+        <div class="form-group">
+          <label for="description"><span class="requirestar">*</span>&nbsp;Remarks :&nbsp;</label>
+          <textarea [(ngModel)]=" remarks" class="form-control" formControlName="remarks" placeholder="Remarks"
+            rows="1" required></textarea>
+        </div>
+      </div>
+
+      <div class="col-md-12 pull-right">
+        <button *ngIf="isUpdate" type="submit" class="btn btn-success btnreset" [disabled]="!myForm.valid">Update</button>
+        <button *ngIf="isAdd" type="submit" class="btn btn-success btnreset" [disabled]="!myForm.valid">Add</button>
+        <a (click)="reset()" class="btn btn-success btnsave">Reset</a>
+      </div>
+
+    </form>
+  </div>
+
+  <div class="pad_top inputbor">
+    <div *ngIf="!showContent" class="loader"><span></span></div>
+    <table datatable *ngIf="showContent" [dtOptions]="dtOptions" class="row-border hover" style="width: 100%;">
+      <thead>
+        <tr>
+          <th scope="col">Service Id</th>
+          <th scope="col">Service Name</th>
+          <th scope="col">Display Name</th>
+          <th scope="col">URL</th>
+          <th scope="col">Description</th>
+          <th scope="col">Active Status</th>
+          <th scope="col">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let service of services">
+          <th scope="row">{{service.service_id}}</th>
+          <td>{{service.service_name}}</td>
+          <td>{{service.display_name}}</td>
+          <td>{{service.action_url}}</td>
+          <td>{{service.description}}</td>
+          <td ><span class="activebac" *ngIf="service.enable == 'T'">Active</span>
+            <span class="inactivebac" *ngIf="service.enable == 'F'">In Active</span></td>
+          <!-- <td>{{service.enable}}</td> -->
+          <td><i (click)="update( service )" class="fa fa-edit" aria-hidden="true"></i>&nbsp; &nbsp;
+            <i (click)="open(content,service)" class="fa fa-eye" aria-hidden="true"></i>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+  </div>
+</div>
+
+
+<ng-template #content let-modal>
+  <div class="modal-header">
+    <!-- <h4 class="modal-title" id="modal-basic-title">Profile update</h4> -->
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="m_l_30 col-md-12 fs_14">
+      <div class="col-md-12 inputbor">
+        <div class="rolehead"> Service Details</div>
+        <hr>
+
+        <table class="table">
+          <tbody>
+            <tr>
+              <td>Service Id :</td>
+              <td><span class="textcol">{{viewService.service_id}} </span></td>
+              <td>Created On :</td>
+              <td><span class="textcol">{{viewService.service_added_on}} </span></td>
+            </tr>
+            <tr>
+              <td>Service Name:</td>
+              <td><span class="textcol">{{viewService.service_name}} </span></td>
+              <td>Updated On :</td>
+              <td><span class="textcol">{{viewService.updated_on}} </span></td>
+            </tr>
+            <tr>
+              <td>Description:</td>
+              <td><span class="textcol">{{viewService.description}} </span></td>
+              <td>URL :</td>
+              <td><span class="textcol">{{viewService.action_url}} </span></td>
+            </tr>
+            <tr>
+              <td>Node Type:</td>
+              <td><span class="textcol">{{viewService.node_type}} </span></td>
+              <td>Parant Service :</td>
+              <td><span class="textcol">{{viewService.parent_service}} </span></td>
+            </tr>
+            <tr>
+              <td>Icon:</td>
+              <td><span class="textcol"><i style="color:#000;font-size:20px" class="{{viewService.icon}}"></i>
+                  {{viewService.icon}} </span></td>
+              <td>Enable :</td>
+              <td><span class="textcol activebac" *ngIf="viewService.enable == 'T'">Active </span>
+                <span class="textcol inactivebac" *ngIf="viewService.enable == 'F'">In Active </span>
+              </td>
+            </tr>
+            <tr>
+              <td>Added By:</td>
+              <td><span class="textcol"> {{viewService.added_by}} </span></td>
+              <td>Updated By :</td>
+              <td><span class="textcol">{{viewService.updated_by}} </span></td>
+            </tr>
+          </tbody>
+        </table>
+
+      </div>
+
+    </div>
+  </div>
+  <div class="modal-footer">
+
+  </div>
+</ng-template>

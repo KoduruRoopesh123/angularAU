@@ -1,0 +1,57 @@
+.body{
+    margin-top:20px;
+}
+
+.m_l_30{
+    margin-right:0px;
+    margin-left:0px;
+    font-size:14px;
+}
+.form-control{
+    width:250px;
+    font-size: 14px;
+}
+
+#department{
+    width:250px;
+}
+.upload{
+font-size:14px;
+}
+/* .form-check{
+    float:left;
+} */
+.pull-right{
+    margin-top:20px;
+    text-align:right
+}
+.pull-left{
+    margin-top:20px;
+    float:left
+}
+.form-inline .form-check-label{
+    margin-right:20px;
+}
+textarea{
+    width:90%;
+}
+
+/*radio button css manual color change*/
+
+.btn-info{
+    color: #fff;
+    background-color: #6D3078;
+    border-color: #6D3078;
+}
+
+.btn-info:not([disabled]):not(.disabled).active, .btn-info:not([disabled]):not(.disabled):active, .show>.btn-info.dropdown-toggle{
+    color: #fff;
+    background-color: #F37435;
+    border-color: #F37435;
+    box-shadow: 0 0 0 0.2rem #f0ad4e;
+}
+.pointer{
+    cursor:pointer;
+}
+
+/*radio button css manual color change end*/

@@ -1,0 +1,59 @@
+table{
+    font-size:14px;
+}
+.fa-check{
+    color:#417505;
+}
+.fa-close{
+    color:#D0021B;
+}
+.fa-eye{
+    color:#F37435;
+}
+.approved{
+    background: #417505;
+    padding:5px;
+    border-radius: 5px;
+    color:#fff;
+}
+
+.rejected{
+    background: #D0021B;
+    padding:5px;
+    border-radius: 5px;
+    color:#fff;
+}
+.processing{
+    background: #F37435;
+    padding:5px;
+    border-radius: 5px;
+    color:#fff;
+}
+.pending{
+    background: #F5A623;
+    padding:5px;
+    border-radius: 5px;
+    color:#fff;
+}
+.body{
+    margin-top:20px;
+}
+
+.preor1{
+    background: #ffef96;
+}
+.preor2{
+    background:#eea29a;
+}
+.preor0{
+    background:#50c878;
+}
+
+.disableIcon{
+    pointer-events: none;
+    cursor: not-allowed;
+    color: #c0c0c0;
+}
+
+
+

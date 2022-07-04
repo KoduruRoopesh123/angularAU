@@ -1,0 +1,237 @@
+<div class="m_l_30">
+  <div class="col-md-12 inputbor">
+    <div class="head">
+      <span  data-toggle="tooltip" data-placement="right" title="Back"class="red-tooltip"><a *ngIf="isUpdate" (click)="create()" style="float:left;border-radius:50px;cursor: pointer;" class="btn btn-primary"><i class="fa fa-arrow-left" aria-hidden="true" style="color:white"></i></a></span>
+      <div>Module Management</div>
+    </div>
+    <hr>
+    <form class="form-inline" [formGroup]="myForm" (submit)="submitDept()">
+  
+        <div class="col-md-4 ">
+        <div class="form-group">
+          <input type="hidden" [(ngModel)]=" module_id " class="form-control" formControlName="module_id">
+          <input type="hidden" [(ngModel)]=" updateDept " class="form-control" id="roleId" formControlName="updateDept">
+          <label for="module_name"><span class="requirestar">*</span>&nbsp;Module Name :&nbsp;</label>
+          <input type="text" [(ngModel)]=" module_name " class="form-control inputwidth" id="roleName"
+            formControlName="module_name" placeholder="Module Name" required>
+        </div>
+      </div>
+
+      <div class="col-md-8">
+        <div class="form-group">
+          <label for="description"><span class="requirestar">*</span>&nbsp;Description :&nbsp;</label>
+          <textarea [(ngModel)]=" module_desc " class="form-control" formControlName="module_desc" placeholder="Description"
+            rows="1" required></textarea>
+        </div>
+      </div>
+
+      <div class="col-md-4 pdt10" *ngIf="isUpdate">
+        <div class="form-group" style="font-size:14px">Active Status : &nbsp;
+          <label class="switch">
+            <input type="checkbox" [ngModel]="enable == 'T'" [value]="enable == 'T'" formControlName="enable">
+            <span class="slider round"></span>
+          </label>
+        </div>
+      </div>
+
+      <div class="col-md-8 pdt10" *ngIf="isUpdate">
+        <div class="form-group">
+          <label for="Remarks"><span class="requirestar">*</span>&nbsp;Remarks :&nbsp;</label>
+          <textarea class="form-control" formControlName="remarks" [(ngModel)]="remarks" placeholder="Remarks"
+            rows="1" required></textarea>
+        </div>
+      </div>
+
+
+      <hr>
+
+
+      <div class="col md-12 pdt10">
+         <div class="head">
+      <div>Rights And Services</div>
+    </div>
+
+      </div>
+
+      <div class="col-md-12 padlr0" >
+        
+       <div class="col-md-3" style="float:left;color:#6D3078">Rights</div>
+        <div class="col-md-3" style="float:left;color:#6D3078">Services</div>
+          <div class="col-md-2" style="float:left;color:#6D3078">Allow Downlaod</div>
+          <div class="col-md-2" style="float:left;color:#6D3078"> Active Satus</div>
+          <div class="col-md-2" style="float:left;color:#6D3078">Remove</div>
+       
+        <div formArrayName="details" class="form-group" *ngFor="let field of myForm.get('details').controls; let ind = index;">
+     
+          <div [formGroupName]="ind">
+             <div class="col-md-3 pdt10" style="float:left">
+               <div class="form-group" style="font-size:14px">
+                 <input type="text" class="form-control inputwidth" style="height:10%"
+                   formControlName="rights" [ngModel]="rights[ind]" placeholder="Right Name" required>
+               </div>
+             </div>
+             <!-- [ngModel]="selectedItems1" -->
+             <div class="col-md-3 pdt10" style="float:left">
+               <div class="form-group" style="font-size:14px">
+                <ng-multiselect-dropdown  [placeholder]="'Select Services'" [settings]="dropdownSettings"
+                [data]="services" [ngModel]="selectedItems[ind]" formControlName="service" required>
+              </ng-multiselect-dropdown>
+               </div>
+             </div>
+
+             <div class="col-md-2 pdt10" style="float:left;margin-bottom:11px">
+              <div class="form-group" style="font-size:14px">  &nbsp;
+                <label class="switch">
+                  <input type="checkbox" [ngModel]="download[ind] == 'T'" [value]="download[ind] == 'T'" formControlName="download">
+                  <span class="slider round"></span>
+                </label>
+              </div>
+            </div>
+            
+
+            <div class="col-md-2 pdt10" style="float:left;margin-bottom:11px">
+              <div class="form-group" style="font-size:14px">  &nbsp;
+                <label class="switch">
+                  <input type="checkbox" [ngModel]="active_status[ind] == 'T'" [value]="active_status[ind] == 'T'" formControlName="active_status">
+                  <span class="slider round"></span>
+                </label>
+              </div>
+            </div>
+
+            <div class="col-md-2 pdt10" style="float:left;margin-bottom:11px">
+              <div class="form-group" style="font-size:14px">  &nbsp;
+               <a (click) = "deleteRow(ind)" > <i class="fa fa-remove fa-2x" style="color:#D0021B"></i></a>
+              </div>
+            </div>
+               <!-- <hr> -->
+           </div>
+  
+      </div>
+      </div>
+     
+  
+      <!-- class="remdisable" -->
+
+    <div class="col-md-12 pull-right">
+      <button *ngIf="isUpdate" type="submit" class="btn btn-success btnsave" [disabled]="!myForm.valid">Update</button>
+      <button *ngIf="isAdd" type="submit" class="btn btn-success btnsave" [disabled]="!myForm.valid">Add</button>
+      <a (click)="reset()" *ngIf="isAdd" class="btn btn-success btnreset">Reset</a>
+      <a (click)="addRow()" class="btn btn-success addright">Add New Rights</a>
+    </div>
+    </form>
+  </div>
+
+  <div class="pad_top inputbor">
+    <div *ngIf="!showContent" class="loader"><span></span></div>
+    <table datatable *ngIf="showContent" [dtOptions]="dtOptions" class="row-border hover"  style="width:100%">
+      <thead>
+        <tr>
+          <th scope="col">Module Id</th>
+          <th scope="col">Module Name</th>
+          <th scope="col">Description</th>
+          <th scope="col">Created On</th>
+          <th scope="col">Updated On</th>
+          <th scope="col">Active Status</th>
+          <th scope="col">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let dept of depts">
+          <td>{{dept.module_id}}</td>
+          <td>{{dept.module_name}}</td>
+          <td>{{dept.description}}</td>
+          <td>{{dept.added_on}}</td>
+          <td>{{dept.updated_on}}</td>
+          <td ><span class="activebac" *ngIf="dept.enable == 'T'">Active</span>
+          <span class="inactivebac" *ngIf="dept.enable == 'F'">In Active</span></td>
+          <td><i (click)="update( dept )" class="fa fa-edit" aria-hidden="true"></i>&nbsp; &nbsp;
+            <i (click)="open(content,dept)" class="fa fa-eye" aria-hidden="true"></i>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+  </div>
+</div>
+
+<ng-template #content let-modal>
+  <div class="modal-header">
+    <!-- <h4 class="modal-title" id="modal-basic-title">Profile update</h4> -->
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="m_l_30 col-md-12 fs_14">
+      <div class="col-md-12 inputbor">
+        <div class="rolehead"> Module Details</div>
+    
+        <table class="table">
+          <tbody>
+            <tr>
+              <td>Module Name :</td>
+              <td><span class="textcol">{{viewDept.module_name}} </span></td>
+              <td>Description:</td>
+              <td><span class="textcol">{{viewDept.description}} </span></td>
+              
+            </tr>
+            <tr>
+              <td>Created By :</td>
+              <td><span class="textcol">{{viewDept.added_by}} </span></td>
+              <td>Created On :</td>
+              <td><span class="textcol">{{viewDept.added_on}} </span></td>
+             
+            </tr>
+            <tr>
+              <td>Updated By:</td>
+              <td><span class="textcol">{{viewDept.updated_by}} </span></td>
+              <td>Updated On :</td>
+              <td><span class="textcol">{{viewDept.updated_on}} </span></td>
+            </tr>
+            <tr>
+              <td>Enable</td>
+              <td ><span *ngIf="viewDept.enable == 'T'" class="activebac">Active</span>
+                <span *ngIf="viewDept.enable == 'F'" class="inactivebac">In Active</span>
+              </td>
+              <td>Module Id :</td>
+              <td><span class="textcol">{{viewDept.module_id}} </span></td>
+            
+            </tr>
+          </tbody>
+        </table>
+        <div class="rolehead"> Rights & Services</div>
+     
+        <table class="table" style="text-align:center">
+            <thead>
+              <tr>
+                <th scope="col">Rights</th>
+                <th scope="col" style="width:60%">Services</th>
+                <th scope="col">Allow Download</th>
+                <th scope="col">Active Status</th>
+              </tr>
+            </thead>
+            <tbody>
+             <tr *ngFor="let details of viewDept.details">
+              <td>{{details.rights}}</td>
+               <td >
+                 <span class="serviceclass" *ngFor="let services of details.services">
+                    {{services.display_name}} |
+                 </span></td>
+               <td >
+                <span *ngIf="details.download == 'T'" class="activebac">Enabled</span>
+                <span class="inactivebac" *ngIf="details.download == 'F'">Disabled</span>
+              </td>
+              <td >
+                <span *ngIf="details.active_status == 'T'" class="activebac">Active</span>
+                <span class="inactivebac" *ngIf="details.active_status == 'F'">Inactive</span>
+              </td>
+             </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+
+  </div>
+</ng-template>

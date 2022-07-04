@@ -1,0 +1,282 @@
+<div class="m_l_30">
+  <div class="col-md-12 col-sm-12  inputbor">
+
+  <div class="head">
+    <div>Inbox</div>
+    <span style="float: right;margin-right: 15px;font-size: 14px;color: black;"><i class="fa fa-circle" aria-hidden="true" style="
+      color: #eea29a;
+      margin-right: 5px;
+  "></i>Heigh</span>
+      <span style="float: right;margin-right: 15px;font-size: 14px;color: black;"><i class="fa fa-circle" aria-hidden="true" style="
+      color: #ffef96;
+      margin-right: 5px;
+  "></i>Medium</span>
+      <span style="float: right;margin-right: 15px;font-size: 14px;color: black;"><i class="fa fa-circle" aria-hidden="true" style="
+      margin-right: 5px;
+      color: #50c878;
+  "></i>Low</span>
+</div>
+
+<hr style="margin-top:30px">
+
+      <div style="margin-top:20px">
+        <div *ngIf="!showContent" class="loader"><span></span></div>
+     
+        <table datatable *ngIf="showContent" [dtOptions]="dtOptions" class="row-border hover" style="width:100%">
+        <thead>
+          <tr>
+            <th scope="col">Request id</th>
+            <th scope="col">Service Name</th>
+            <th scope="col">File/Action</th>
+            <th scope="col">Checker</th>
+            <th scope="col">Req Date</th>
+            <th scope="col">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let report of reportdata" class="preor{{report.priority}}"> 
+            <th scope="row">{{report.req_token_id}}</th>
+            <td>{{report.service}}</td>
+            <td ><span *ngIf="report.service_type == 'FileUpload'">{{report.filename}} <i class="fa fa-download" (click)="downloadExcel(report.filename)" style="font-size:15px;cursor: pointer;color:blue"></i></span>
+                 <span *ngIf="report.service_type != 'FileUpload'">{{report.action}}</span>
+            </td>
+            <td>{{report.checker_id}}</td>
+            <td>{{report.req_gen_on}}</td>
+            <td>
+              <span *ngIf="report.checker_id == login_id"><i (click)="open(content,report,$event)" class="fa fa-check" style="cursor:pointer" aria-hidden="true"></i></span>&nbsp;
+              <span *ngIf="report.checker_id == login_id"><i (click)="open(content,report,$event)" class="fa fa-close" style="cursor:pointer" aria-hidden="true"></i></span>&nbsp;
+              <span *ngIf="report.service_id == serviceId; else elseBlock">
+                <span *ngIf="report.alert_id != null; else disable">
+                <i (click)="alertOpen(content1,report,$event)"  class="fa fa-eye" style="cursor:pointer" aria-hidden="true"></i>
+                </span>
+                <ng-template #disable><i (click)="alertOpen(content1,report,$event)"  class="fa fa-eye disableIcon" aria-hidden="true" ></i></ng-template>
+              </span>
+              <ng-template #elseBlock><i (click)="open(content,report,$event)"  class="fa fa-eye" style="cursor:pointer" aria-hidden="true"></i></ng-template>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+</div>
+</div>
+
+<ng-template #content let-modal >
+  <div class="modal-header">
+    <h4 *ngIf="approvedstatus" class="modal-title" id="modal-basic-title">Approve Remarks</h4>
+    <h4 *ngIf="rejectedstatus" class="modal-title" id="modal-basic-title">Reject Remarks</h4>
+    <h4 *ngIf="viewstatus" class="modal-title" id="modal-basic-title">Inbox View</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+
+    <div class="m_l_30 col-md-12 fs_14">
+      <div *ngIf="viewstatus">
+      <div class="col-md-12 inputbor">
+     
+        <table class="table">
+          <tbody>
+            <tr>
+              <td>Request Id :</td>
+              <td><span class="textcol">{{viewData.req_token_id}} </span></td>
+              <td>Service Name :</td>
+              <td><span class="textcol">{{viewData.service}} </span></td>
+            </tr>
+            <tr>
+              <td>File/Action :</td>
+              <td><span class="textcol" *ngIf="viewData.service_type == 'FileUpload'">{{viewData.filename}} </span>
+                  <span class="textcol" *ngIf="viewData.service_type != 'FileUpload'">{{viewData.action}} </span>
+              </td>
+              <td>Checker :</td>
+              <td><span class="textcol">{{viewData.checker_id}} </span></td>
+            </tr>
+            <tr>
+              <td>Request Date :</td>
+              <td><span class="textcol">{{viewData.req_gen_on}} </span></td>
+              <td>Maker :</td>
+              <td><span class="textcol">{{viewData.maker_id}} </span></td>
+            </tr>
+            <tr>
+              <td>Channel :</td>
+              <td><span class="textcol">{{viewData.channel}}</span></td>
+              <td>Maker Remarks</td>
+              <td><span class="textcol">{{viewData.maker_remarks}}</span></td>
+            </tr>
+              <tr>
+              <td>Priority :</td>
+              <td>
+                <span class="textcol" *ngIf="viewData.priority == '0'">Low</span>
+                <span class="textcol" *ngIf="viewData.priority == '1'">Medium</span>
+                <span class="textcol" *ngIf="viewData.priority == '2'">High</span>
+            </td>
+              <td>Request Status</td>
+              <td><span class="textcol">{{viewData.req_status}}</span></td>
+            </tr>
+            <tr>
+              <td>Action</td>
+              <td><span class="textcol">{{viewData.action}}</span></td>
+              <td></td>
+            </tr>
+     
+          </tbody>
+        </table>
+
+      </div>
+    </div>
+
+    
+
+    <div *ngIf="approvedstatus || rejectedstatus" >
+      <div class="col-md-12 inputbor">
+        
+        <form (ngSubmit)="onSubmit($event)">
+          <div class="col-md-12 pdt10">
+           
+           
+              <label for="rollName"><span class="requirestar">*</span>&nbsp;Remarks:&nbsp;</label>
+              <textarea  name="remarks" class="form-control" placeholder="Remarks"
+              rows="1" style="width:100% !important" required></textarea>
+             
+          </div>
+          <div class="col-md-12 pdt10" style="text-align: center;">
+            <button type="submit" class="btn btn-success" (click)="modal.dismiss('Cross click')">submit</button>
+          </div>
+
+        </form>
+         
+      </div>
+    </div>
+
+
+    </div>
+
+  </div>
+  <div class="modal-footer">
+
+  </div>
+</ng-template>
+
+
+<ng-template #content1 let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Alert View</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="m_l_30 col-md-12 fs_14">
+      <div class="col-md-12 inputbor">
+        <div class="head"> Alert Details</div>
+        <table class="table">
+          <tbody>
+            <tr>
+              <td>Alert Id :</td>
+              <td><span class="textcol">{{viewAlert.alert_id}} </span></td>
+              <td>Created On :</td>
+              <td><span class="textcol">{{viewAlert.added_on}} </span></td>
+            </tr>
+            <tr>
+              <td>Alert Name:</td>
+              <td><span class="textcol">{{viewAlert.alert_name}} </span></td>
+              <td>Updated On :</td>
+              <td><span class="textcol">{{viewAlert.updated_on}} </span></td>
+            </tr>
+            <tr>
+              <td>Alert Type :</td>
+              <td ><span class="textcol">{{viewAlert.alert_type}} </span>
+              </td>
+              <td>Created By</td>
+              <td><span class="textcol">{{viewAlert.added_by}}</span></td>
+            </tr>
+            <tr>
+              <td>Approve Status</td>
+              <td><span class="textcol">{{viewAlert.approve_status}}</span></td>
+              <td>Execution Mode</td>
+              <td><span class="textcol">{{viewAlert.exec_mode}}</span></td>
+            </tr>
+            <tr>
+              <td>Remarks :</td>
+              <td><span class="textcol">{{viewAlert.remarks}}</span></td>
+              <td>Updated By</td>
+              <td><span class="textcol">{{viewAlert.updated_by}}</span></td>
+            </tr>
+            <tr>
+              <td>Batch Duration :</td>
+              <td><span class="textcol">{{viewAlert.batch_exec_on}}</span></td>
+            </tr>
+                
+         
+          </tbody>
+        </table>
+       
+        <div *ngIf="viewAlert.sms_template">
+          <hr>
+        <div class="smsHeader"> SMS Template: </div>
+        <div class="smsBody"> {{viewAlert.sms_template}} </div>
+        </div>
+        
+        <div *ngIf="viewAlert.email_variables">
+          <hr>
+          <div class="smsHeader">Email Template:</div>
+          <div class="smsBody"> {{viewAlert.email_template}} </div>
+        </div>
+
+
+        <hr>
+
+        <div class="head"> Rules Config</div>
+     
+        <table class="table" style="text-align:center">
+            <thead>
+              <tr>
+                <th scope="col">Alert Name</th>
+                <th scope="col">Condition</th>
+                <th scope="col">Value1</th>
+                <th scope="col">Value2</th>
+              </tr>
+            </thead>
+            <tbody>
+             <tr *ngFor="let details of rules">
+              <td>{{details.input_field_service}}</td>
+              <td>{{details.condition}}</td>
+              <td>{{details.value1}}</td>
+              <td>{{details.value2}}</td>
+             </tr>
+          </tbody>
+        </table>
+
+        <hr>
+        <div class="head">SMS Variable Mapping</div>
+        <table class="table" style="text-align:center">
+            <thead>
+              <tr>
+                <th scope="col">Variable Name</th>
+                <th scope="col">Input File Column</th>
+              </tr>
+            </thead>
+            <tbody>
+             <tr *ngFor="let smsDetails of sms_mapping">
+              <td>{{smsDetails.input_field_name}}</td>
+              <td>{{smsDetails.value1[0].val_name}}</td>
+             </tr>
+          </tbody>
+        </table>
+      
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+  </div>
+</ng-template>
+
+
+
+
+
+
+   
+        
+ 

@@ -1,0 +1,174 @@
+<div class="row m_l_30" style="margin-right:0px;margin-left:0px">
+
+    <div class="col-md-12 inputbor">
+  
+      <div class="head">
+        <div> Auto Debit Upload</div>
+      </div>
+      
+      <hr>
+      <form class="form-inline" [formGroup]="myForm" (submit)="submitDebit()">
+        <div class="col-md-4 pull-left">
+          <div class="form-group">
+            <label for="file">File Upload :&nbsp;</label>
+            <input class="form-control inputwidth"
+              accept="text/plain"
+              [(ngModel)]="this.file" formControlName="file" type="file" id="file" (change)="onChange($event)" required>
+            </div>
+        </div>
+  
+        <div class="col-md-4 pull-left">
+          <div class="form-group">
+            <label for="exampleFormControlSelect1">Approver :&nbsp;</label>
+            <select class="form-control" formControlName="approver" [(ngModel)]="approverSelected" required>
+              <option disabled [value]="null">-- Select Approver --</option>
+              <option *ngFor="let Approvers of approver" [value]="Approvers.login_id">{{Approvers.first_name}}</option>
+            </select>
+          </div>
+        </div>
+  
+        <div class="col-md-12" *ngIf="isAlert">
+          <div class="col-md-3 alert alert-danger" style="float:left" role="alert">
+            Only Excel files allowed
+          </div>
+        </div>
+        
+        <div class="col-md-8 pull-left">
+          <div class="form-group">
+            <label for="exampleFormControlSelect1">Remarks :&nbsp;</label>
+            <textarea id="w3review" [(ngModel)]="remarks" formControlName="remarks" rows="2" cols="50" required></textarea>
+          </div>
+        </div>
+  
+        <div class="col-md-4 " style="margin-top:35px">Prepority :&nbsp;
+          <div class="btn-group">
+            <label class="btn btn-info" [(ngModel)]="radioModel" btnRadio="Low" tabindex="0" formControlName="priority"
+              role="button">Low</label>
+            <label class="btn btn-info" [(ngModel)]="radioModel" btnRadio="Medium" tabindex="0" formControlName="priority"
+              role="button">Medium</label>
+            <label class="btn btn-info" [(ngModel)]="radioModel" btnRadio="High" tabindex="0" formControlName="priority"
+              role="button">High</label>
+          </div>
+  
+        </div>
+        
+        <div class="col-md-12 pull-right">
+          
+          <!-- <button (click)="downloadFile()" class="btn btn-success upload">Download</button> &nbsp; -->
+          <button (click)="reset()" class="btn btn-success upload">Reset</button> &nbsp;
+          <button type="submit" class="btn btn-success upload" [disabled]="!myForm.valid">Upload</button>
+        </div>
+  
+      </form>
+    </div>
+  
+    <div class="pad_top inputbor">
+      <div *ngIf="!showContent" class="loader"><span></span></div>
+      <table datatable *ngIf="showContent" [dtOptions]="dtOptions" class="row-border hover" style="width:100%">
+        <thead>
+          <tr>
+            <th scope="col">Token Id</th>
+            <th scope="col">File Name</th>
+            <th scope="col">Maker</th>
+            <th scope="col">Checker</th>
+            <th scope="col">Raised On</th>
+            <th scope="col">Closed Date</th>
+            <!-- <th scope="col">Maker Remarks</th>
+            <th scope="col">Checker Remarks</th> -->
+            <th scope="col">Approval Status</th>
+            <th scope="col">Processing Status</th>
+            
+            <th scope="col">Action</th>
+  
+            
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let filedetal of filedetals">
+            <td>{{filedetal.req_token_id}}</td>
+            <td>{{filedetal.filename}}</td>
+            <td>{{filedetal.maker_id}}</td>
+            <td>{{filedetal.checker_id}}</td>
+            <td>{{filedetal.req_gen_on}}</td>
+            <td>{{filedetal.req_auth_date}}</td>
+            <!-- <td>{{filedetal.maker_remarks}}</td>
+            <td>{{filedetal.checker_remarks}}</td> -->
+            <td>{{filedetal.req_status}}</td>
+            <td>{{filedetal.processing_status}}</td>
+            
+            <td>
+              <i (click)="open(content,filedetal)" class="fa fa-eye" aria-hidden="true"></i>
+            </td>
+  
+            
+            <!-- <td *ngIf="filedetal.enable == 'T'"><span class="activebac">Active</span></td>
+            <td *ngIf="filedetal.enable == 'F'"><span class="inactivebac">In Active</span></td> -->
+          
+          </tr>
+        </tbody>
+      </table>
+  
+    </div>
+  
+  </div>
+  
+  
+  
+  <ng-template #content let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">EMI On POS View</h4>
+      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+  
+      <div class="m_l_30 col-md-12 fs_14">
+        <div class="col-md-12 inputbor">
+          <div class="head"> Auto Debit Details</div>
+          <hr>
+          <table class="table">
+            <tbody>
+              <tr>
+                <td>Checker :</td>
+                <td><span class="textcol">{{viewemionpos.checker_id}} </span></td>
+                <td>Maker :</td>
+                <td><span class="textcol">{{viewemionpos.maker_id}} </span></td>
+              </tr>
+              <tr>
+                <td>Checker Remarks:</td>
+                <td><span class="textcol">{{viewemionpos.checker_remarks}} </span></td>
+                <td>Maker Remarks :</td>
+                <td><span class="textcol">{{viewemionpos.maker_remarks}} </span></td>
+              </tr>
+              <tr>
+                <td>File Name :</td>
+                <td><span class="textcol">{{viewemionpos.filename}} </span></td>
+                <td>Processing Status</td>
+                <td><span class="textcol">{{viewemionpos.processing_status}}</span></td>
+              </tr>
+              <tr>
+                <td>Token Id :</td>
+                <td ><span class="textcol">{{viewemionpos.req_token_id}}</span></td>
+               
+                <td>Request Status</td>
+                <td><span class="textcol">{{viewemionpos.req_status}}</span></td>
+              </tr>
+              <tr>
+                <td>Raised On :</td>
+                <td ><span class="textcol">{{viewemionpos.req_gen_on}}</span></td>
+               
+                <td>Closed Date</td>
+                <td><span class="textcol">{{viewemionpos.req_auth_date}}</span></td>
+              </tr>
+            </tbody>
+          </table>
+  
+        </div>
+  
+       
+      </div>
+  
+    </div>
+   
+  </ng-template>

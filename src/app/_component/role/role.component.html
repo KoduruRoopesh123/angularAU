@@ -1,0 +1,235 @@
+<div class="m_l_30">
+
+  <div class="col-md-12 inputbor">
+    <div class="head">
+      <span  data-toggle="tooltip" data-placement="right" title="Back"class="red-tooltip"><a *ngIf="isUpdate" (click)="create()" style="float:left;border-radius:50px;cursor: pointer;" class="btn btn-primary"><i class="fa fa-arrow-left" aria-hidden="true" style="color:white"></i></a></span>
+      <div> Role Management</div>
+    </div>
+
+    <hr>
+    <form class="form-inline" [formGroup]="myForm" (submit)="submitRole()">
+      <div class="col-md-4 pdt10">
+        <div class="form-group">
+          <input type="hidden" [(ngModel)]=" role_id " class="form-control" id="roleId" formControlName="role_id">
+          <label for="rollName"><span class="requirestar">*</span>&nbsp;Role Name :&nbsp;</label>
+          <input type="text" (keyup)="validation($event)" [(ngModel)]=" role_name " class="form-control inputwidth"
+            id="inputwidth" formControlName="role_name" placeholder="Roll Name" required>
+        </div>
+      </div>
+
+       
+      <div class="col-md-8">
+        <div class="form-group">
+          <label for="description"><span class="requirestar">*</span>&nbsp;Description :&nbsp;</label>
+          <textarea [(ngModel)]=" role_desc " class="form-control" formControlName="role_desc" placeholder="Description"
+            rows="1" required>
+
+            </textarea>
+        </div>
+      </div>
+
+      <div class="col-md-4 pdt10" *ngIf="isUpdate">
+        <div class="form-group" style="font-size:14px">
+          Active Status : &nbsp;
+          <label class="switch">
+            <input type="checkbox" [ngModel]="enable == 'T'" formControlName="enable">
+            <span class="slider round"></span>
+          </label>
+        </div>
+      </div>
+
+      <div class="col-md-8 pdt10" *ngIf="isUpdate">
+        <div class="form-group">
+          <label>Remarks: &nbsp;</label>
+          <textarea class="form-control" formControlName="remarks" [(ngModel)]="remarks" placeholder="Remarks"
+            id="exampleFormControlTextarea1" rows="1" required></textarea>
+        </div>
+      </div>
+
+      <hr>
+
+      <div class="col md-12 pdt10">
+        <div class="head">
+     <div>Rights And Services</div>
+   </div>
+
+     </div>
+
+     <div class="col-md-12 padlr0" style="padding-left: 0px;padding-right: 0px;" >
+       
+      <div class="col-md-4" style="float:left;color:#6D3078">Modules</div>
+      <div class="col-md-4" style="float:left;color:#6D3078">Rights</div>
+      <div class="col-md-2" style="float:left;color:#6D3078">Active Status</div>
+      <div class="col-md-2" style="float:left;color:#6D3078">Remove</div>
+      
+       <div formArrayName="details" class="form-group" *ngFor="let field of myForm.get('details').controls; let ind = index;">
+    
+         <div [formGroupName]="ind">
+
+                <div class="col-md-4 pdt10" style="float:left">
+                <div class="form-group">
+                <select class="form-control pointernone" [ngModel]=" selectedItem[ind] " (ngModelChange) = "moduleChange($event,ind)" formControlName="module" id="inputwidth"
+                >
+                <option disabled [value]="">--Please Select--</option>
+                <option *ngFor="let module of modules"  [value]="module.Module_ID" >{{module.Module_Name}}</option>
+                </select>
+                </div>
+                </div>
+                
+                <div class="col-md-4 pdt10" style="float:left">
+                  <div class="form-group">
+                  <select class="form-control" [ngModel]="selectedItems[ind]"  (ngModelChange) = "rightChange($event,ind)" formControlName="right" id="inputwidth">
+                  <option disabled [value]="">--Please Select--</option>
+                  <option *ngFor="let right of rights[ind]" [disabled]="right.disable" [value]="right.right" >{{right.right}}</option>
+                  </select>
+                  </div>
+                  </div>
+                  <div class="col-md-2 pdt10" style="float:left;margin-bottom:11px">
+                    <div class="form-group" style="font-size:14px">  &nbsp;
+                      <label class="switch">
+                        <input type="checkbox" [ngModel]="active_status[ind] == 'T'" [value]="active_status[ind] == 'T'" formControlName="active_status">
+                        <span class="slider round"></span>
+                      </label>
+                    </div>
+                  </div>
+
+                  <div class="col-md-2 pdt10" style="float:left;margin-bottom:11px">
+                    <div class="form-group" style="font-size:14px">  &nbsp;
+                     <a (click) = "deleteRow(ind)" > <i class="fa fa-remove fa-2x" style="color:#D0021B"></i></a>
+                    </div>
+                  </div>
+
+          </div>
+ 
+     </div>
+     </div>
+     <div class="col-md-12 pull-right">
+      <span class="alert alert-danger" role="alert" *ngIf="isAlert">
+        Only characters and spaces will be allowed
+      </span>
+
+      <button *ngIf="isUpdate" type="submit" class="btn btn-success btnreset" [disabled]="!myForm.valid">Update</button>
+      <button *ngIf="isAdd" type="submit" class="btn btn-success btnreset" [disabled]="!myForm.valid">Add</button>  
+      <a (click)="reset()" class="btn btn-success btnsave">Reset</a>
+      <a (click)="addRow()" class="btn btn-success addright">Add New Rights</a>
+    </div>
+
+    </form>
+  </div>
+
+  <div class="pad_top inputbor">
+    <div *ngIf="!showContent" class="loader"><span></span></div>
+    <!-- <div *ngIf="!showContent"><img src="/assets/images/logo/auloader.png" alt="Girl in a jacket" style="width:110px;height:97px;margin-left:43%"></div> -->
+    <table datatable *ngIf="showContent" [dtOptions]="dtOptions" class="row-border hover" style="width:100%">
+      <thead>
+        <tr>
+          <th scope="col">Role Id</th>
+          <th scope="col">Role Name</th>
+          <th scope="col">Created On</th>
+          <th scope="col">Updated On</th>
+          <th scope="col">Enable</th>
+          <th scope="col">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let role of roles">
+          <th scope="row">{{role.role_id}}</th>
+          <td>{{role.role_name}}</td>
+          <td>{{role.added_on}}</td>
+          <td>{{role.updated_on}}</td>
+          <td ><span class="activebac" *ngIf="role.enable == 'T'">Active</span>
+                <span class="inactivebac" *ngIf="role.enable == 'F'">In Active</span>
+              </td>
+
+          <td><i (click)="update( role )" class="fa fa-edit" aria-hidden="true"></i>&nbsp; &nbsp;
+            <i (click)="open(content,role)" class="fa fa-eye" aria-hidden="true"></i>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+  </div>
+
+
+</div>
+
+<ng-template #content let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Role View</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+
+    <div class="m_l_30 col-md-12 fs_14">
+      <div class="col-md-12 inputbor">
+        <div class="head"> Role Details</div>
+      
+        <table class="table">
+          <tbody>
+            <tr>
+              <td>Role Id :</td>
+              <td><span class="textcol">{{viewRole.role_id}} </span></td>
+              <td>Created On :</td>
+              <td><span class="textcol">{{viewRole.added_on}} </span></td>
+            </tr>
+            <tr>
+              <td>Role Name:</td>
+              <td><span class="textcol">{{viewRole.role_name}} </span></td>
+              <td>Updated On :</td>
+              <td><span class="textcol">{{viewRole.updated_on}} </span></td>
+            </tr>
+            <tr>
+              <td>Enable :</td>
+              <td ><span class="activebac" *ngIf="viewRole.enable == 'T'">Active</span>
+                <span class="inactivebac" *ngIf="viewRole.enable == 'F'">In Active</span>
+              </td>
+              <td>Created By</td>
+              <td><span class="textcol">{{viewRole.added_by}}</span></td>
+            </tr>
+            <tr>
+              <td>Remarks :</td>
+              <td><span class="textcol">{{viewRole.remarks}}</span></td>
+              <td>Updated By</td>
+              <td><span class="textcol">{{viewRole.updated_by}}</span></td>
+            </tr>
+         
+          </tbody>
+        </table>
+        <hr>
+
+        <div class="head"> Modules And Right</div>
+     
+        <table class="table" style="text-align:center">
+            <thead>
+              <tr>
+                <th scope="col">Module Id</th>
+                <th scope="col">Module Name</th>
+                <th scope="col">Rights</th>
+                <th scope="col">Active Status</th>
+              </tr>
+            </thead>
+            <tbody>
+             <tr *ngFor="let details of viewRoleDetail">
+              <td>{{details.module_id}}</td>
+              <td>{{details.module_name}}</td>
+               <td > {{details.right}} </td>
+              <td>
+                <span *ngIf="details.active_status == 'T'" class="activebac">Active</span>
+                <span class="inactivebac" *ngIf="details.active_status == 'F'">Inactive</span>
+              </td>
+             </tr>
+          </tbody>
+        </table>
+
+      </div>
+
+  
+    </div>
+
+  </div>
+  <div class="modal-footer">
+
+  </div>
+</ng-template>

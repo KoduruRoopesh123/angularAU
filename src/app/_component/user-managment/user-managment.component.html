@@ -1,0 +1,184 @@
+<div class="m_l_30">
+    <div class="col-md-12 col-sm-12  inputbor">
+      <div class="head">
+        <div>User Management</div>
+        </div>
+  <hr style="margin-top:30px">
+  
+        <div style="margin-top:20px">
+          <div *ngIf="!showContent" class="loader"><span></span></div>
+       
+          <table datatable *ngIf="showContent" [dtOptions]="dtOptions" class="row-border hover" style="width:100%">
+          <thead>
+            <tr>
+              <th scope="col">Login Id</th>
+              <th scope="col">User Name</th>
+              <th scope="col">Department</th>
+              <th scope="col">Role Name</th>
+              <th scope="col">User Status</th>
+              <th scope="col">Last Logged On</th>
+              <th scope="col">Action</th>
+            </tr>
+          </thead>
+        
+          <tbody>
+            <tr *ngFor="let report of reportdata">
+              <td scope="row">{{report.login_id}}</td>
+              <td>{{report.first_name}}</td>
+              <td>{{report.department}}</td>
+              <td>{{report.role_name}}</td>
+              <td>{{report.user_status}}</td>
+              <td>{{report.last_login_on}}</td>
+              <td>
+                <i (click)="open(content,report,$event)"  class="fa fa-edit" aria-hidden="true"></i> &nbsp;
+                <i (click)="open(content,report,$event)"  class="fa fa-eye" aria-hidden="true"></i>
+            </td>
+            </tr>
+    
+          </tbody>
+        </table>
+      </div>
+  
+  </div>
+  </div>
+  
+  
+  <ng-template #content let-modal>
+    <div class="modal-header">
+        <h4 *ngIf="edituserauth" class="modal-title" id="modal-basic-title">Change User Details</h4>
+        <h4 *ngIf="viewuserauth" class="modal-title" id="modal-basic-title">User Details</h4>
+      <!-- <h4 *ngIf="viewstatus" class="modal-title" id="modal-basic-title">Inbox View</h4> -->
+      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+     
+      <div class="m_l_30 col-md-12 fs_14">
+        <div *ngIf="viewuserauth">
+        <div class="col-md-12 inputbor">
+          <table class="table">
+            <tbody>
+              <tr>
+                <td>login Id :</td>
+                <td><span class="textcol">{{viewData.login_id}} </span></td>
+                <td>User Name/First Name :</td>
+                <td><span class="textcol">{{viewData.first_name}} </span></td>
+              </tr>
+              <tr>
+                <td>Middle Name :</td>
+                <td><span class="textcol">{{viewData.middle_name}} </span></td>
+                <td>Last Name :</td>
+                <td><span class="textcol">{{viewData.last_name}} </span></td>
+              </tr>
+              <tr>
+                <td>last Failure Attempt :</td>
+                <td><span class="textcol">{{viewData.last_failure_attempt}}</span></td>
+                <td>Last Logged On :</td>
+                <td><span class="textcol">{{viewData.last_login_on}}</span></td>
+              </tr>
+              <tr>
+                <td>Status Changed On :</td>
+                <td><span class="textcol">{{viewData.status_lchg_dt}}</span></td>
+                <td>Logged Status :</td>
+                <td><span class="textcol">{{viewData.logged_in_status}}</span></td>
+              </tr>
+              <tr>
+                <td>Email Id :</td>
+                <td><span class="textcol">{{viewData.email_id}}</span></td>
+                <td>Mobile Number :</td>
+                <td><span class="textcol">{{viewData.mobile_number}} </span></td>
+                
+              </tr>
+              <tr>
+                <td>Designation :</td>
+                <td><span class="textcol">{{viewData.designation}}</span></td>
+                <td>Department :</td>
+                <td><span class="textcol">{{viewData.department}} </span></td>
+              </tr>
+              <tr>
+                <td>Title</td>
+                <td><span class="textcol">{{viewData.title}}</span></td>
+                <td>User Status</td>
+                <td><span class="textcol">{{viewData.user_status}}</span></td>
+              </tr>
+                <tr>
+                  <td>Role Name :</td>
+                <td><span class="textcol">{{viewData.role_name}} </span></td>
+               
+                <td>Modified On</td>
+                <td><span class="textcol">{{viewData.modified_on}}</span></td>
+              </tr>
+               <tr>
+                <td>Password Lock Count</td>
+                <td><span class="textcol">{{viewData.passwd_lock_count}}</span></td>
+                <td>Password Lock Status</td>
+                <td><span class="textcol">{{viewData.passwd_lock_status}}</span></td>
+              </tr>
+              <tr>
+                <td>Password Locked On</td>
+                <td><span class="textcol">{{viewData.passwd_locked_on}}</span></td>
+                <td>Previous Role</td>
+                <td><span class="textcol">{{viewData.previous_role}}</span></td>
+              </tr>
+              <tr>
+                <td>Reporting Manager</td>
+                <td><span class="textcol">{{viewData.reporting_manager}}</span></td>
+                <td>Role Changed On</td>
+                <td><span class="textcol">{{viewData.role_lchg_dt}}</span></td>
+              </tr>
+            
+       
+            </tbody>
+          </table>
+  
+        </div>
+      </div>
+  
+      <div style="margin-top:20px;" *ngIf="edituserauth">
+        <div class="col-md-12 inputbor">
+       
+          <form  (ngSubmit)="onSubmit($event)">
+            <div class="row pdt10">
+                <div class="col-md-6 pdt10">
+                  <div class="form-group">
+                    <label for="exampleFormControlSelect1"><span class="requirestar">*</span>&nbsp; Status {{ServicesList}}:&nbsp;</label>
+                    <select class="form-control" name="user_status"  [(ngModel)]=" ServicesList " (ngModelChange) = "statusChange($event)"
+                      id="exampleFormControlSelect1" required>
+                      <option *ngFor="let ServicesList of ServicesLists">{{ServicesList}}</option>
+                    </select>
+                  </div>
+                </div>
+         
+                <div class="col-md-6 pdt10">
+                  <div class="form-group">
+                    <label for="exampleFormControlSelect1"><span class="requirestar">*</span>&nbsp;Role :&nbsp;</label>
+                    <select class="form-control" name="role_id" [(ngModel)]=" role_id " (ngModelChange) = "roleChange($event)"
+                      id="exampleFormControlSelect1" required>
+                      <option *ngFor="let role of roles" [value]="role.role_id">
+                        {{role.role_name}}</option>
+                    </select>
+                  </div>
+                </div>
+            </div>
+            <div class="col-md-12 pdt10" style="text-align: center;">
+              <button type="submit" class="btn btn-success" [disabled]="changedformfeald">submit</button>
+            </div>
+          </form>
+        </div>
+      </div>
+  
+  
+      </div>
+  
+    </div>
+    <div class="modal-footer">
+  
+    </div>
+  </ng-template>
+  
+  
+  
+     
+          
+   

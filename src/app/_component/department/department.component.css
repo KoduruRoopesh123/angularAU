@@ -1,0 +1,138 @@
+.form-control{
+    font-size: 14px;
+}
+.form-inline label{
+    font-size: 14px; 
+}
+.btn-success{
+ font-size: 14px;
+}
+
+ng-multiselect-dropdown{
+    width:160px;
+    font-size: 13px;
+}
+#roleName{
+    width:160px;
+}
+
+.pull-right{
+    margin-top:20px;
+}
+.btnreset{
+    position: relative;
+    float: right;
+    margin-right: 5px;
+}
+.btnsave{
+    position: relative;
+    float: right;
+    margin-right: 5px;
+}
+.pad_top{
+    font-size:14px;
+}
+select.form-control:not([size]):not([multiple]){
+    height:auto;
+}
+
+.servicestyle{
+    margin-right: 5px;
+    float: left;
+    padding: 5px;
+    border: 1px solid #bbb;
+    border-radius: 10px;
+}
+
+.rolehead{
+    text-align: center;
+    font-weight: 600;
+    margin-bottom: 10px;
+    font-size: 18px;
+}
+
+
+/*Toggel button*/
+
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 25px;
+  }
+  
+  .switch input { 
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+  
+  .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #D0021B;
+    -webkit-transition: .4s;
+    transition: .4s;
+  }
+  
+  .slider:before {
+    position: absolute;
+    content: "";
+    height: 24px;
+    width: 24px;
+    left: 1px;
+    /* bottom: 4px; */
+    background-color: white;
+    -webkit-transition: .4s;
+    transition: .4s;
+  }
+  
+  input:checked + .slider {
+    background-color: #28a745;
+  }
+  
+  input:focus + .slider {
+    box-shadow: 0 0 1px #28a745;
+  }
+  
+  input:checked + .slider:before {
+    -webkit-transform: translateX(35px);
+    -ms-transform: translateX(35px);
+    transform: translateX(35px);
+  }
+  
+  /* Rounded sliders */
+  .slider.round {
+    border-radius: 34px;
+  }
+  
+  .slider.round:before {
+    border-radius: 50%;
+  }
+
+/* Topggel button end */
+
+.addright{
+  float: right;
+    margin-right: 5px;
+}
+.padlr0{
+  padding-left:0px;
+  padding-right:0px;
+}
+.serviceclass{
+  padding-left: 2px;
+    padding-right: 2px;
+    margin-right: 2px;
+    margin-left: 2px;
+}
+.remdisable{
+  pointer-events: none;
+  cursor: default;
+}
+
+

@@ -1,0 +1,29 @@
+<div class="wrapper fadeInDown" *ngIf="loginPageShow">
+    <div id="formContent">
+  
+    <div class="fadeIn first">
+    <img src="/assets/images/logo/au_bank_logo.jpg" id="iconlogo" alt="User Icon" />
+    </div>
+  
+    <form [formGroup]="formLogin" (submit)="submitLogin()">
+        <div class="form-group">
+    <input type="text" class="fadeIn second" name="username" type="text" placeholder="User Name" formControlName="username">
+    <input type="hidden" name="Action"  formControlName="action" >    
+     </div>
+     <div class="form-group">
+    <input type="{{ isActive ? 'password' : 'text' }}" class="fadeIn third pass" formControlName="password"  placeholder="Password">
+    <i class="fa fa-eye eye_pos fadeIn third pass" (mousedown)="mouseDown()" (mouseup)="mouseUp()" aria-hidden="true"></i>
+  </div>
+
+    <div *ngIf="loginError" class="alert alert-danger" style="margin-left: 17%;margin-right: 17%;" role="alert">
+      {{errorDesc}}
+    </div>
+
+    <input type="submit" id ="but_submit" class="fadeIn fourth button_style_3" value="Log In">
+  
+  </form>
+    <div id="formFooter">
+    <a class="underlineHover" (click)="forgotpass()">Forgot Password?</a>
+    </div>
+    </div>
+    </div>

@@ -1,0 +1,167 @@
+<div class="row m_l_30">
+    <div class="col-md-12 inputbor">
+  
+      <div class="head">
+        <div> Authorization Report</div>
+      </div>
+  
+      <hr>
+
+      <form class="form-inline" [formGroup]="myForm" (submit)="reportFilter()">
+        <div class="col-md-12">
+  
+          <div class="col-xs-12 col-12 col-md-4 form-group mb-4" style="float:left">
+            <label>Token Id</label>
+            <input type="text" formControlName="token_id" [(ngModel)]="token_id" placeholder="Token Id" class="form-control inputwidth">
+          </div>
+          <div class="col-xs-12 col-12 col-md-4 form-group mb-4" style="float:left">
+            <label>Maker</label>
+            <input type="text" formControlName="maker" [(ngModel)]="maker" placeholder="Maker" class="form-control inputwidth">
+          </div>
+         <div class="col-xs-12 col-12 col-md-4 form-group mb-4" style="float:left">
+          <label>Raised Date</label>
+            <input type="text" placeholder="Raised Date" formControlName="datefilter" [(ngModel)]="datefilter" class="form-control inputwidth" bsDaterangepicker [bsConfig]="{ isAnimated: true }">
+         </div> 
+          </div>
+           <div class="col-md-12"> 
+            <div class="col-xs-12 col-12 col-md-4 form-group mb-4" style="float:left"></div>
+          <div class="col-xs-12 col-12 col-md-2 form-group mb-4" style="float:left;text-align: right;">
+            <button type="submit" class="btn btn-success">Search</button>
+          </div>
+          <div class="col-xs-12 col-12 col-md-2 form-group mb-4" style="float:left">
+          <a (click)="reset()" class="btn btn-success btnsave">Reset</a>
+          </div>
+          <div class="col-xs-12 col-12 col-md-4 form-group mb-4" style="float:left"></div>
+        </div>
+    </form>
+  <hr>
+      <!-- <div class="row">
+        <div class="col-xs-12 col-12 col-md-4 form-group mb-3">
+          <input type="text" placeholder="Datepicker" class="form-control" bsDatepicker>
+        </div>
+        <div class="col-xs-12 col-12 col-md-4 form-group mb-3">
+          <input type="text" placeholder="Datepicker" class="form-control" bsDatepicker>
+        </div>
+        <div class="col-xs-12 col-12 col-md-4 form-group mb-3">
+          <button type="button" class="btn btn-success">Search</button>
+        </div>
+      </div> -->
+      <div *ngIf="!showContent" class="loader"><span></span></div>
+      <table datatable *ngIf="showContent" [dtOptions]="dtOptions" class="row-border hover" style="width:100%">
+        <thead>
+          <tr>
+            <th scope="col">Token Id</th>
+            <th scope="col">File Name</th>
+            <th scopr="col">Channel </th>
+            <th scope="col">Maker</th>
+            <th scope="col">Checker</th>
+            <th scope="col">Raised On</th>
+            <th scope="col">Closed Date</th>
+            <th scope="col">Maker Remarks</th>
+            <th scope="col">Checker Remarks</th>
+            <th scope="col">Processing Status</th>
+            <th scope="col">Approval Status</th>
+            <th scope="col">Action
+              
+            </th>
+  
+            
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let report of reportdata">
+            <td>{{report.req_token_id}}</td>
+            <td>{{report.filename}}</td>
+            <td>{{report.channel}}</td>
+            <td>{{report.maker_id}}</td>
+            <td>{{report.checker_id}}</td>
+            <td>{{report.req_gen_on}}</td>
+            <td>{{report.req_auth_date}}</td>
+            <td>{{report.maker_remarks}}</td>
+            <td>{{report.checker_remarks}}</td>
+            <td>{{report.processing_status}}</td>
+            <td ><span class="activebac" *ngIf="report.req_status == 'Approved'">Approved</span>
+              <span class="inactivebac" *ngIf="report.req_status == 'Rejected'">Rejected</span></td>
+            <td><i (click)="open(content,report)" class="fa fa-eye" aria-hidden="true"></i></td>
+  
+            
+            <!-- <td *ngIf="report.enable == 'T'"><span class="activebac">Active</span></td>
+            <td *ngIf="report.enable == 'F'"><span class="inactivebac">In Active</span></td> -->
+          
+          </tr>
+        </tbody>
+      </table>
+  
+    </div>
+  
+  </div>
+  
+  
+  <!--  Model for view -->
+  <ng-template #content let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">Authentication Report View</h4>
+      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="m_l_30 col-md-12 fs_14">
+        <div class="col-md-12 inputbor">
+        
+          <table class="table">
+            <tbody>
+              <tr>
+                <td>Request Id :</td>
+                <td><span class="textcol">{{viewData.req_token_id}} </span></td>
+                <td>Serviuce Name :</td>
+                <td><span class="textcol">{{viewData.service}} </span></td>
+              </tr>
+              <tr>
+                <td>File/Action :</td>
+                <td><span class="textcol" *ngIf="viewData.filename">{{viewData.filename}} </span>
+                    <span class="textcol" *ngIf="viewData.action">{{viewData.action}} </span>
+                </td>
+                <td>Checker :</td>
+                <td><span class="textcol">{{viewData.checker_id}} </span></td>
+              </tr>
+              <tr>
+                <td>Request Date :</td>
+                <td><span class="textcol">{{viewData.req_gen_on}} </span></td>
+                <td>Action</td>
+                <td><span class="textcol">{{viewData.action}}</span></td>
+              </tr>
+              <tr>
+                <td>Channel :</td>
+                <td><span class="textcol">{{viewData.channel}}</span></td>
+                <td>Maker Remarks</td>
+                <td><span class="textcol">{{viewData.maker_remarks}}</span></td>
+              </tr>
+                <tr>
+                <td>Priority :</td>
+                <td>
+                  <span class="textcol" *ngIf="viewData.priority == '0'">Low</span>
+                  <span class="textcol" *ngIf="viewData.priority == '1'">Medium</span>
+                  <span class="textcol" *ngIf="viewData.priority == '2'">High</span>
+              </td>
+                <td>Request Status</td>
+                <td ><span class="activebac" *ngIf="viewData.req_status == 'Approved'">Approved</span>
+                  <span class="inactivebac" *ngIf="viewData.req_status == 'Rejected'">Rejected</span></td>
+                <!-- <td><span class="textcol">{{viewData.req_status}}</span></td> -->
+              </tr>
+       
+            </tbody>
+          </table>
+  
+        </div>
+   
+  
+  
+      </div>
+  
+    </div>
+    <div class="modal-footer">
+  
+    </div>
+  </ng-template>
+  <!--  Model view End-->

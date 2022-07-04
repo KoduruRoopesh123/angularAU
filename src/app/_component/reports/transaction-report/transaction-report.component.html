@@ -1,0 +1,140 @@
+<div class="row m_l_30">
+  <div class="col-md-12 inputbor">
+
+    <div class="head">
+      <div> Access Report</div>
+    </div>
+
+    <hr>
+
+    <form class="form-inline" [formGroup]="myForm" (submit)="reportFilter()">
+      <div class="col-md-12">
+
+        <div class="col-xs-12 col-12 col-md-4 form-group mb-3" style="float:left">
+          <label>Login Name</label>
+          <input type="text" formControlName="login_id" [(ngModel)]="login_id" placeholder="Login Name" class="form-control inputwidth">
+        </div>
+        <div class="col-xs-12 col-12 col-md-4 form-group mb-3" style="float:left">
+          <label>Action Tride</label>
+          <input type="text" formControlName="action_tride" [(ngModel)]="action_tride" placeholder="Action Tride" class="form-control inputwidth">
+        </div>
+       <div class="col-xs-12 col-12 col-md-4 form-group mb-3" style="float:left">
+        <label>Accessed Time</label>
+          <input type="text" placeholder="Log Date" formControlName="datefilter" [(ngModel)]="datefilter" class="form-control inputwidth" bsDaterangepicker [bsConfig]="{ isAnimated: true }">
+       </div> 
+        <!-- <div class="col-xs-12 col-12 col-md-3 form-group mb-2" style="float:left;padding-top:25px">
+          <button type="submit" class="btn btn-success">Search</button>
+        </div> -->
+      </div>
+      <div class="col-md-12"> 
+        <div class="col-xs-12 col-12 col-md-4 form-group mb-4" style="float:left"></div>
+      <div class="col-xs-12 col-12 col-md-2 form-group mb-4" style="float:left;text-align: right;">
+        <button type="submit" class="btn btn-success">Search</button>
+      </div>
+      <div class="col-xs-12 col-12 col-md-2 form-group mb-4" style="float:left">
+      <a (click)="reset()" class="btn btn-success btnsave">Reset</a>
+      </div>
+      <div class="col-xs-12 col-12 col-md-4 form-group mb-4" style="float:left"></div>
+    </div>
+  </form>
+  <hr>
+
+    <div *ngIf="!showContent" class="loader"><span></span></div>
+    <table *ngIf="showContent" datatable [dtOptions]="dtOptions" class="row-border hover" style="width:100%">
+      <thead>
+        <tr>
+          <th scope="col">Sl No</th>
+          <th scope="col">Audit Id</th>
+          <th scope="col">Login Name</th>
+          <th scope="col">Request From</th>
+          <th scope="col">Accessed Time</th>
+          <th scope="col">Action Tride</th>
+          <th scope="col">Action Status</th>
+          <th scope="col">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let report of reportdata;let i = index;">
+          <td>{{i}}</td>
+          <th scope="row">{{report.req_id}}</th>
+          <td>{{report.login_id}}</td>
+          <td>{{report.request_from}}</td>
+          <td>{{report.browser_time}}</td>
+          <td>{{report.action}}</td>
+          <td>{{report.status}}</td>
+          <td>
+            <i (click)="open(content,report)" class="fa fa-eye" aria-hidden="true"></i>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+  </div>
+</div>
+<!--  Model for view -->
+<ng-template #content let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Transcational View</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+
+    <table class="table">
+      <tbody>
+        <tr>
+          <td>Audit Id :</td>
+          <td><span class="textcol"> {{viewData.req_id}} </span></td>
+          <td>Log Date :</td>
+          <td><span class="textcol">{{viewData.log_date}} </span></td>
+
+
+        </tr>
+        <tr>
+          <td>Login Id :</td>
+          <td><span class="textcol"> {{viewData.login_id}}</span></td>
+
+          <td>Action Tride :</td>
+          <td><span class="textcol">{{viewData.action}} </span></td>
+        </tr>
+        <tr>
+          <td>Request From :</td>
+          <td><span class="textcol"> {{viewData.request_from}}</span></td>
+          <td>Action Status :</td>
+          <td><span class="textcol">{{viewData.status}} </span></td>
+
+        </tr>
+        <tr>
+          <td>Accessed Time :</td>
+          <td><span class="textcol"> {{viewData.browser_time}} </span></td>
+          <td>Error Code :</td>
+          <td><span class="textcol">{{viewData.error_code}} </span></td>
+        </tr>
+        <tr>
+          <td>App Request Time :</td>
+          <td><span class="textcol">{{viewData.app_req_time}} </span></td>
+          <td>App Server Id :</td>
+          <td><span class="textcol">{{viewData.app_server_id}} </span></td>
+        </tr>
+        <tr>
+          <td>App Responce Time :</td>
+          <td><span class="textcol">{{viewData.app_resp_time}} </span></td>
+          <td>Web Request Time :</td>
+          <td><span class="textcol">{{viewData.web_req_time}} </span></td>
+        </tr>
+        <tr>
+          <td>Tab Id :</td>
+          <td><span class="textcol">{{viewData.tab_id}} </span></td>
+          <td>Web Server Id :</td>
+          <td><span class="textcol">{{viewData.web_server_id}} </span></td>
+        </tr>
+      </tbody>
+    </table>
+
+  </div>
+  <div class="modal-footer">
+    <!-- <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Save</button> -->
+  </div>
+</ng-template>
+<!--  Model view End-->

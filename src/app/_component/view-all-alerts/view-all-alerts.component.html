@@ -1,0 +1,206 @@
+<div class="row m_l_30">
+  <div class="col-md-12 inputbor">
+
+    <div class="head">
+      <div> Alert Request Report</div>
+    </div>
+
+    <hr>
+
+    <form class="form-inline" [formGroup]="myForm" (submit)="reportFilter()">
+      <div class="col-md-12">
+
+        <div class="col-xs-12 col-12 col-md-4 form-group mb-3" style="float:left">
+          <label>Request Token Id</label>
+          <input type="text" formControlName="req_token_id" [(ngModel)]="req_token_id" placeholder="ALERT0000000028" class="form-control inputwidth">
+        </div>
+        <div class="col-xs-12 col-12 col-md-4 form-group mb-3" style="float:left">
+          <label>Input File</label>
+          <input type="text" formControlName="input_file" [(ngModel)]="input_file" placeholder="File Name" class="form-control inputwidth">
+        </div>
+       <div class="col-xs-12 col-12 col-md-4 form-group mb-4" style="float:left">
+        <label>Triggered On</label>
+          <input type="text" placeholder="Triggered Date" formControlName="datefilter" [(ngModel)]="datefilter" class="form-control inputwidth" bsDaterangepicker [bsConfig]="{ isAnimated: true }">
+       </div> 
+        <!-- <div class="col-xs-12 col-12 col-md-3 form-group mb-2" style="float:left;padding-top:25px">
+          <button type="submit" class="btn btn-success">Search</button>
+        </div> -->
+      </div>
+      <div class="col-md-12"> 
+        <div class="col-xs-12 col-12 col-md-4 form-group mb-4" style="float:left"></div>
+      <div class="col-xs-12 col-12 col-md-2 form-group mb-4" style="float:left;text-align: right;">
+        <button type="submit" class="btn btn-success">Search</button>
+      </div>
+      <div class="col-xs-12 col-12 col-md-2 form-group mb-4" style="float:left">
+      <a (click)="reset()" class="btn btn-success btnsave">Reset</a>
+      </div>
+      <div class="col-xs-12 col-12 col-md-4 form-group mb-4" style="float:left"></div>
+    </div>
+  </form>
+  <hr>
+    <div *ngIf="!showContent" class="loader"><span></span></div>
+   
+    <table *ngIf="showContent" datatable [dtOptions]="dtOptions" class="row-border hover" style="width:100%">
+      <thead>
+        <tr>
+          <th scope="col">Req Token Id</th>
+          <th scope="col">Alert Id</th>
+          <th scope="col">Input File</th>
+          <!-- <th scope="col">Status File</th> -->
+          <th scope="col">Total Records</th>
+          <th scope="col">Valid Records</th>
+          <th scope="col">Invalid Records</th>
+          <th scope="col">Status</th>
+          <th scope="col">Remarks</th>
+          <th scope="col">Triggered On</th>
+          <th scope="col">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let report of reportdata;let i = index;">
+          <!-- <td>{{i}}</td> -->
+          <td scope="row">{{report.req_token_id}}</td>
+          <td>{{report.alert_id}}</td>
+          <td>{{report.input_file}}</td>
+          <!-- <td>{{report.status_file}}</td> -->
+          <td>{{report.total_records}}</td>
+          <td>{{report.valid_records}}</td>
+          <td>{{report.invalid_records}}</td>
+          <td>{{report.status}}</td>
+          <td>{{report.remarks}}</td>
+          <td>{{report.triggered_on}}</td>
+          <td>
+            <i (click)="open(content,report)" class="fa fa-eye" aria-hidden="true"></i>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+
+  </div>
+</div>
+<!--  Model for view -->
+<ng-template #content let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Transcational View</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+
+    <div class="row">
+        <div class="col-md-3 pad15">
+          Req Token Id :
+        </div>
+        <div class="col-md-3 pad15">
+          <span class="textcol"> {{viewData.req_token_id}} </span>
+        </div>
+        <div class="col-md-3 pad15">
+          Alert Id :
+        </div>
+        <div class="col-md-3 pad15">
+          <span class="textcol">{{viewData.alert_id}} </span>
+        </div>
+    </div>
+    <div class="row">
+      <div class="col-md-3 pad15">
+          Input File :
+      </div>
+      <div class="col-md-3 pad15" style="overflow: hidden;width:25%">
+        <span  data-toggle="tooltip" data-placement="right" title="{{viewData.input_file}}"class="red-tooltip textcol"> {{viewData.input_file}}</span>
+      </div>
+      <div class="col-md-3 pad15">
+        Total Recorde :
+      </div>
+      <div class="col-md-3 pad15">
+        <span class="textcol">{{viewData.total_records}} </span>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-3 pad15">
+          Valid Records :
+      </div>
+      <div class="col-md-3 pad15">
+        <span class="textcol"> {{viewData.valid_records}}</span>
+      </div>
+      <div class="col-md-3 pad15">
+          Invalid Records :
+      </div>
+      <div class="col-md-3 pad15">
+        <span class="textcol">{{viewData.invalid_records}} </span>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-3 pad15">
+        Status :
+      </div>
+      <div class="col-md-3 pad15">
+        <span class="textcol"> {{viewData.status}} </span>
+      </div>
+      <div class="col-md-3 pad15">
+        Remarks :
+      </div>
+      <div class="col-md-3 pad15">
+        <span class="textcol"> {{viewData.remarks}} </span>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-3 pad15">
+         Status File :
+      </div>
+      <div class="col-md-3 pad15 " style="overflow: hidden;width:25%">
+        <span  data-toggle="tooltip" data-placement="right" title="{{viewData.status_file}}"class="red-tooltip textcol"> {{viewData.status_file}}</span>
+      </div>
+      <div class="col-md-3 pad15">
+        Triggered On :
+      </div>
+      <div class="col-md-3 pad15">
+        <span class="textcol">{{viewData.triggered_on}} </span>
+      </div>
+    </div>
+ 
+ 
+    <!-- <table class="table">
+      <tbody>
+        <tr>
+          <td>Req Token Id :</td>
+          <td><span class="textcol"> {{viewData.req_token_id}} </span></td>
+          <td>Alert Id :</td>
+          <td><span class="textcol">{{viewData.alert_id}} </span></td>
+        </tr>
+        <tr>
+          <td>Input File :</td>
+          <td><span class="textcol"> {{viewData.input_file}}</span></td>
+
+          <td>Total Records :</td>
+          <td><span class="textcol">{{viewData.total_records}} </span></td>
+        </tr>
+        <tr>
+          <td>Valid Records :</td>
+          <td><span class="textcol"> {{viewData.valid_records}}</span></td>
+          <td>Invalid Records :</td>
+          <td><span class="textcol">{{viewData.invalid_records}} </span></td>
+        </tr>
+        <tr>
+          <td>Status :</td>
+          <td><span class="textcol"> {{viewData.status}} </span></td>
+          <td>Remarks :</td>
+          <td><span class="textcol">{{viewData.remarks}} </span></td>
+        </tr>
+        <tr>
+          <td>Status File :</td>
+          <td><span class="textcol">{{viewData.status_file}} </span></td>
+          <td>Triggered On :</td>
+          <td><span class="textcol">{{viewData.triggered_on}} </span></td>
+        </tr>
+   
+      </tbody>
+    </table> -->
+
+  </div>
+  <div class="modal-footer">
+    <!-- <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Save</button> -->
+  </div>
+</ng-template>
+<!--  Model view End-->

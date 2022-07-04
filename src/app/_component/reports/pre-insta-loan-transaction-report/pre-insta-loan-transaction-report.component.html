@@ -1,0 +1,143 @@
+<div class="row m_l_30">
+    <div class="col-md-12 inputbor">
+  
+      <div class="head">
+        <div> Pre Insta Loan Transaction Report</div>
+      </div>
+  
+      <hr>
+  
+      
+      <form class="form-inline" [formGroup]="myForm" (submit)="reportFilter()">
+        <div class="col-md-12">
+  
+          <div class="col-xs-12 col-12 col-md-4 form-group mb-4" style="float:left">
+            <label>Request Id</label>
+            <input type="text" formControlName="req_id" [(ngModel)]="req_id" placeholder="Request Id" class="form-control inputwidth">
+          </div>
+         <div class="col-xs-12 col-12 col-md-4 form-group mb-4" style="float:left">
+          <label>Request Date</label>
+            <input type="text" placeholder="Request Date" formControlName="datefilter" [(ngModel)]="datefilter" class="form-control inputwidth" bsDaterangepicker [bsConfig]="{ isAnimated: true }">
+         </div> 
+         <div class="col-xs-12 col-12 col-md-4 form-group mb-4" style="float:left">
+          <label>Action Name</label>
+         <select class="form-control pointernone" formControlName="action_name" [(ngModel)]="selectedItem" id="inputwidth"
+         >
+         <option disabled [value]="null">--Please Select--</option>
+         <option *ngFor="let action of actions"  [value]="action.action" >{{action.action}}</option>
+         </select>
+          </div>
+          <!-- <div class="col-xs-12 col-12 col-md-12 form-group mb-2" style="float:left;padding-top:25px;text-align: center;">
+            <button type="submit" class="btn btn-success">Search</button>
+          </div> -->
+        </div>
+        <div class="col-md-12"> 
+          <div class="col-xs-12 col-12 col-md-4 form-group mb-4" style="float:left"></div>
+        <div class="col-xs-12 col-12 col-md-2 form-group mb-4" style="float:left;text-align: right;">
+          <button type="submit" class="btn btn-success">Search</button>
+        </div>
+        <div class="col-xs-12 col-12 col-md-2 form-group mb-4" style="float:left">
+        <a (click)="reset()" class="btn btn-success btnsave">Reset</a>
+        </div>
+        <div class="col-xs-12 col-12 col-md-4 form-group mb-4" style="float:left"></div>
+      </div>
+    </form>
+  
+  <hr>
+      <!-- <div class="row">
+        <div class="col-xs-12 col-12 col-md-4 form-group mb-3">
+          <input type="text" placeholder="Datepicker" class="form-control" bsDatepicker>
+        </div>
+        <div class="col-xs-12 col-12 col-md-4 form-group mb-3">
+          <input type="text" placeholder="Datepicker" class="form-control" bsDatepicker>
+        </div>
+        <div class="col-xs-12 col-12 col-md-4 form-group mb-3">
+          <button type="button" class="btn btn-success">Search</button>
+        </div>
+      </div> -->
+  
+  
+  
+      <div *ngIf="!showContent" class="loader"><span></span></div>
+      <table *ngIf="showContent" datatable [dtOptions]="dtOptions" class="row-border hover" style="width:100%">
+        <thead>
+          <tr>
+            <th scope="col">Request Id</th>
+            <th scope="col">Request Time</th>
+            <th scope="col">Responce Time</th>
+            <th scope="col">Action Tried</th>
+            <th scope="col">Status</th>
+            <th scope="col">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let report of reportdata">
+            <th scope="row">{{report.req_id}}</th>
+            <td>{{report.request_time}}</td>
+            <td>{{report.response_time}}</td>
+            <td>{{report.action}}</td>
+            <td>{{report.status}}</td>
+            <td>
+              <i (click)="open(content,report)" class="fa fa-eye" aria-hidden="true"></i>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+  
+    </div>
+  
+  </div>
+  
+  
+  <!--  Model for view -->
+  <ng-template #content let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">Pre Insta Loan Transaction View</h4>
+      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+  
+  
+      <table class="table">
+        <tbody>
+          <tr>
+            <td>Request Id :</td>
+            <td><span class="textcol">{{viewData.req_id}} </span></td>
+            <td>Responce Time :</td>
+            <td><span class="textcol">{{viewData.response_time}} </span></td>
+          </tr>
+          <tr>
+            <td>Request Time :</td>
+            <td><span class="textcol"> {{viewData.request_time}}</span></td>
+            <td>Status :</td>
+            <td><span class="textcol">{{viewData.status}} </span></td>
+          </tr>
+          <tr>
+            <td>Client IP :</td>
+            <td><span class="textcol"> {{viewData.client_ip}}</span></td>
+            <td>Server ID :</td>
+            <td><span class="textcol">{{viewData.server_id}} </span></td>
+          </tr>
+          <tr>
+            <td>Error Code :</td>
+            <td><span class="textcol"> {{viewData.error_code}} </span></td>
+            <td>Action Tried :</td>
+            <td><span class="textcol">{{viewData.action}} </span></td>
+          </tr>
+          <tr>
+            <td>Account No:</td>
+            <td><span class="textcol">{{viewData.account_no}} </span></td>
+            <td>Channel Name:</td>
+            <td><span class="textcol">{{viewData.channel_name}} </span></td>
+          </tr>
+        </tbody>
+      </table>
+  
+    </div>
+    <div class="modal-footer">
+  
+    </div>
+  </ng-template>
+  <!--  Model view End-->

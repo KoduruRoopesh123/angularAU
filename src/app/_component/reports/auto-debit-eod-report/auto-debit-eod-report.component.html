@@ -1,0 +1,181 @@
+<div class="row m_l_30">
+    <div class="col-md-12 inputbor">
+  
+      <div class="head">
+        <div> Auto Debit EOD Request Report</div>
+      </div>
+      <hr>
+      <form class="form-inline" [formGroup]="myForm" (submit)="reportFilter()">
+      <div class="col-md-12">
+       <div class="col-xs-12 col-12 col-md-4 form-group mb-3" style="float:left">
+        <label>Request Date</label>
+          <input type="text" placeholder="Request Date" formControlName="datefilter" [(ngModel)]="datefilter" class="form-control inputwidth" bsDaterangepicker [bsConfig]="{ isAnimated: true }">
+       </div> 
+        <div class="col-xs-12 col-12 col-md-4 form-group mb-3" style="float:left">
+          <label>File Token Id</label>
+          <input type="text" formControlName="input_file" [(ngModel)]="input_file" placeholder="File Token Id" class="form-control inputwidth">
+        </div>
+        <div class="col-xs-12 col-12 col-md-4 form-group mb-4" style="float:left">
+          <label>Processed Status</label>
+         <select class="form-control pointernone" formControlName="processed_status" [(ngModel)]="processed_status" id="inputwidth"
+         >
+         <option disabled [value] = "null">--Please Select--</option>
+         <option *ngFor="let processedState of processedStatus"  [value]="processedState.processed_status" >{{processedState.processed_status}}</option>
+         </select>
+          </div>
+        <!-- <div class="col-xs-12 col-12 col-md-12 form-group mb-12" style="float:left">
+          <button type="submit" class="btn btn-success">Search</button>
+        </div> -->
+  
+      </div>
+
+      <div class="col-md-12"> 
+        <div class="col-xs-12 col-12 col-md-4 form-group mb-4" style="float:left"></div>
+      <div class="col-xs-12 col-12 col-md-2 form-group mb-4" style="float:left;text-align: right;">
+        <button type="submit" class="btn btn-success">Search</button>
+      </div>
+      <div class="col-xs-12 col-12 col-md-2 form-group mb-4" style="float:left">
+      <a (click)="reset()" class="btn btn-success btnsave">Reset</a>
+      </div>
+      <div class="col-xs-12 col-12 col-md-4 form-group mb-4" style="float:left"></div>
+    </div>
+
+  </form>
+  <hr>
+  
+      <div *ngIf="!showContent" class="loader"><span></span></div>
+      <table *ngIf="showContent" datatable [dtOptions]="dtOptions" class="row-border hover" style="width:100%">
+        <thead>
+            <tr>
+              <th scope="col">File Token Id</th>
+              <th scope="col">File Record Id</th>
+              <th scope="col">Added On</th>
+              <th scope="col">Processed On</th>
+              <th scope="col">Processed Status</th>
+              <th scope="col">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let report of reportdata">
+              <td scope="row">{{report.file_token_id}}</td>
+              <td>{{report.file_record_id}}</td>
+              <td>{{report.added_on}}</td>
+              <td>{{report.processed_on}}</td>
+              <td>{{report.processed_status}}</td>
+              <td>
+                <i (click)="open(content,report)" class="fa fa-eye" aria-hidden="true"></i>
+              </td>
+            </tr>
+          </tbody>
+      </table>
+  
+    </div>
+  
+  </div>
+  
+  
+  <!--  Model for view -->
+  <ng-template #content let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">Auto Debit EOD Request View</h4>
+      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+  
+      <table class="table">
+        <tbody>
+          <tr>
+            <td>File Token Id :</td>
+            <td><span class="textcol"> {{viewData.file_token_id}}</span></td>
+  
+            <td>File Record Id :</td>
+            <td><span class="textcol"> {{viewData.file_token_id}}</span></td>
+  
+          </tr>
+          <tr>
+            <td>Record Type :</td>
+            <td><span class="textcol">{{viewData.record_type}} </span></td>
+            <td>Transaction Code :</td>
+            <td><span class="textcol">{{viewData.transaction_code}}</span></td>
+          </tr>
+          <tr>
+            <td>RT Number :</td>
+            <td><span class="textcol">{{viewData.rt_number}} </span></td>
+            <td>DDA Trans Number :</td>
+            <td><span class="textcol">{{viewData.dda_trans_no}} </span></td>
+          </tr>
+          <tr>
+            <td>Dest Account No :</td>
+            <td><span class="textcol"> {{viewData.dest_acct_no}}</span></td>
+            <td>Amount :</td>
+            <td><span class="textcol">{{viewData.amount}} </span></td>
+          </tr>
+          <tr>
+            <td>Cardholder Id:</td>
+            <td><span class="textcol"> {{viewData.cardholder_id}} </span></td>
+            <td>Cardholder Sname :</td>
+            <td><span class="textcol">{{viewData.cardholder_sname}} </span></td>
+  
+          </tr>
+          <tr>
+            <td>Discretion :</td>
+            <td><span class="textcol">{{viewData.discretion}} </span></td>
+            <td>AR Identifier  :</td>
+            <td><span class="textcol">{{viewData.ar_identifier}} </span></td>
+          </tr>
+          <tr>
+            <td>Seq Accumulator :</td>
+            <td><span class="textcol">{{viewData.seq_accumulator}} </span></td>
+            <td>Seq No :</td>
+            <td><span class="textcol">{{viewData.seq_no}} </span></td>
+          </tr>
+          <tr>
+            <td>Ift Api Status :</td>
+            <td><span class="textcol">{{viewData.ift_api_status}} </span></td>
+            <td>Otb Api Status :</td>
+            <td><span class="textcol">{{viewData.otb_api_status}} </span></td>
+          </tr>
+          <tr>
+            <td>processed Status :</td>
+            <td><span class="textcol">{{viewData.processed_status}} </span></td>
+            <td>Added On :</td>
+            <td><span class="textcol">{{viewData.added_on}} </span></td>
+          </tr>
+          <tr>
+            <td>Processed On :</td>
+            <td><span class="textcol">{{viewData.processed_on}} </span></td>
+            <td>Updated On :</td>
+            <td><span class="textcol">{{viewData.updated_on}} </span></td>
+          </tr>
+          <tr>
+            <td>Ift Api Request Id :</td>
+            <td><span class="textcol">{{viewData.ift_api_request_id}} </span></td>
+            <td>Otb Api Iequest Id :</td>
+            <td><span class="textcol">{{viewData.otb_api_request_id}} </span></td>
+          </tr>
+          <tr>
+            <td>Otb Transaction Id :</td>
+            <td><span class="textcol">{{viewData.otb_transaction_id}} </span></td>
+            <td>Otb Purchase Order Number :</td>
+            <td><span class="textcol">{{viewData.otb_purchase_order_number}} </span></td>
+          </tr>
+          <tr>
+            <td>SMS Api Request Id :</td>
+            <td><span class="textcol">{{viewData.sms_api_request_id}} </span></td>
+            <td>SMS Satatus :</td>
+            <td><span class="textcol">{{viewData.sms_status}} </span></td>
+          </tr>
+
+          
+        </tbody>
+      </table>
+  
+  
+    </div>
+    <div class="modal-footer">
+  
+    </div>
+  </ng-template>
+  <!--  Model view End-->
