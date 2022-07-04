@@ -31,3 +31,9 @@ git pull origin master
 
  git config --global user.name "your username"
   git config --global user.password "your password"
+  
+  
+  git branch -m master main
+git fetch origin
+git branch -u origin/main main
+git remote set-head origin -a
