@@ -26,3 +26,8 @@ git push -u origin master
 Step 6:- to take the changes from Github repository to local machine
 
 git pull origin master
+
+
+
+ git config --global user.name "your username"
+  git config --global user.password "your password"
