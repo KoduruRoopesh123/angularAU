@@ -1,39 +1,27 @@
-# angularAU
-Au bank developed css project backup
+# Aubanknew
 
+This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 12.2.0.
 
-Step 1 :- Create a local Repository
+## Development server
 
-git init 
+Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
 
-Step 2:- Adding the file
+## Code scaffolding
 
-a. git add "filename.extention"
-b. git add *
+Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
 
-Step 3:- stage your code
+## Build
 
-git commit -m "any comment"
+Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
 
-Step 4:- Add repository name - this is one time step to link your folder with repository
+## Running unit tests
 
-git remote add origin pathofyourrepository
+Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
 
-Step 5:- Push Code from local machine
- 
-git push -u origin master
+## Running end-to-end tests
 
-Step 6:- to take the changes from Github repository to local machine
+Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
 
-git pull origin master
+## Further help
 
-
-
- git config --global user.name "your username"
-  git config --global user.password "your password"
-  
-  
-  git branch -m master main
-git fetch origin
-git branch -u origin/main main
-git remote set-head origin -a
+To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
